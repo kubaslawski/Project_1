@@ -27,10 +27,23 @@
         </ul>
       </nav>
     </header>
-
+    {% block content %}
     <section class="login-page">
       <h2>Załóż konto</h2>
-      <form>
+      <form method="post" action="">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class ="form-group">
+          {{ field.label_tag }}
+          {{ field }}
+          {% for error in field.errors %}
+            <p style="color: red"></p>
+          {% endfor %}  
+        </div>
+        {% endfor %}
+        <!-- <div class="form-group">
+          <input type="text" name="username" placeholder="Nazwa użytkownika" />
+        </div>
         <div class="form-group">
           <input type="text" name="name" placeholder="Imię" />
         </div>
@@ -45,7 +58,7 @@
         </div>
         <div class="form-group">
           <input type="password" name="password2" placeholder="Powtórz hasło" />
-        </div>
+        </div> -->
 
         <div class="form-group form-group--buttons">
           <a href="login.html" class="btn btn--without-border">Zaloguj się</a>
@@ -53,6 +66,7 @@
         </div>
       </form>
     </section>
+    {% endblock %}
 
     <footer>
       <div class="contact">

@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
+    <title>Zaloguj się</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
   </head>
   <body>
@@ -27,24 +27,21 @@
         </ul>
       </nav>
     </header>
-
+    {% block content %}
     <section class="login-page">
       <h2>Zaloguj się</h2>
-      <form>
-        <div class="form-group">
-          <input type="email" name="email" placeholder="Email" />
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class ="form-group">
+          {{ form.as_p }}
         </div>
-        <div class="form-group">
-          <input type="password" name="password" placeholder="Hasło" />
-          <a href="#" class="btn btn--small btn--without-border reset-password">Przypomnij hasło</a>
-        </div>
-
         <div class="form-group form-group--buttons">
-          <a href="#" class="btn btn--without-border">Załóż konto</a>      
+          <a href="{% url 'register' %}" class="btn btn--without-border">Załóż konto</a>      
           <button class="btn" type="submit">Zaloguj się</button> 
         </div>
       </form>
     </section>
+    
 
     <footer>
         <div class="contact">
@@ -73,5 +70,6 @@
           </div>
         </div>
       </footer>
+      {% endblock %}
   </body>
 </html>

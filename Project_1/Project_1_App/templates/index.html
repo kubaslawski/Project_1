@@ -13,8 +13,12 @@
     <header class="header--main-page">
       <nav class="container container--70">
         <ul class="nav--actions">
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'logout' %}" class="btn btn--small btn--without-border">Wyloguj</a>({{user.get_username}})</li>
+          {% else %}
           <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a></li>
           <li><a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+          {% endif %}
         </ul>
 
         <ul>
