@@ -1,6 +1,12 @@
 from django import forms
+from .models import Category 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+
+
+category_choices = [(c.id, c.name)
+                    for c in Category.objects.all()]
+
 
 
 class SignUpForm(UserCreationForm):
@@ -20,3 +26,6 @@ class UserLoginForm(forms.Form):
     class Meta:
         model = User 
         fields = ('username', 'password')
+
+class CategoryDonationForm(forms.Form):
+    categories = forms.ChoiceField(choices=category_choices, widget=forms.ChoiceField)

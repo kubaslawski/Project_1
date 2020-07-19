@@ -32,4 +32,6 @@ urlpatterns = [
     #mail confirmation 
     re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         activate, name='activate'),
+    #profile
+    path('user_profile/', ex_views.UserProfileView.as_view(), name="user_profile"),
 ]

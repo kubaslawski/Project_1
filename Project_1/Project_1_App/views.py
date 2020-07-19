@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.core.paginator import Paginator
 from django.urls import reverse, reverse_lazy 
+from django.contrib.auth.models import User
 # Create your views here.
 from .models import Category, Institution, Donation
 from django.db.models import Sum, Count
 import random 
 #forms
-from .forms import SignUpForm, UserLoginForm
+from .forms import SignUpForm, UserLoginForm, CategoryDonationForm
 #Mail confirmation, signup & login
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -59,12 +60,13 @@ class LandingPage(View):
 
 class AddDonation(View):
     def get(self, request):
-        return render(request, "form.html")
+        form = CategoryDonationForm()
+        return render(request, "form.html", locals())
 
 
 class Login(View):
     def get(self, request):
-        return render(request, "login.html")
+        return render(request, "login.html", )
 
 
 def signup(request):
@@ -134,3 +136,17 @@ class UserLogoutView(View):
     def get(self, request):
         logout(request)
         return redirect(reverse('base'))
+
+
+class UserProfileView(View):
+    def get(self, request):
+        logged_user = User.objects.get(id=request.user.id)
+        #num of bags
+        donation_quantity = Donation.objects.filter(user_id=request.user.id)
+        dq = donation_quantity.aggregate(total=Sum('quantity'))
+        dq_total = dq['total']
+        #num of supported org.
+        supp_fund = len(Donation.objects.filter(user_id=request.user.id).values('institution_id').annotate(total=Count('institution_id')))
+        bag_per_fund = Donation.objects.filter(user_id=request.user.id).values('institution_id').annotate(Sum('quantity'))
+        return render(request, "profile.html", locals())
+
