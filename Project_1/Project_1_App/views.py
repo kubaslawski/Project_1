@@ -8,7 +8,7 @@ from .models import Category, Institution, Donation
 from django.db.models import Sum, Count
 import random 
 #forms
-from .forms import SignUpForm, UserLoginForm, CategoryDonationForm
+from .forms import SignUpForm, UserLoginForm, CategoryDonationForm, ProfileSettingsForm
 #Mail confirmation, signup & login
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -150,3 +150,31 @@ class UserProfileView(View):
         bag_per_fund = Donation.objects.filter(user_id=request.user.id).values('institution_id').annotate(Sum('quantity'))
         return render(request, "profile.html", locals())
 
+
+class UserSettingsView(View):
+    def get(self, request):
+        form = ProfileSettingsForm()
+        return render(request, "settings.html", locals())
+
+    def post(self, request):
+        form = ProfileSettingsForm(request.POST)
+        if form.is_valid(): # uruchomienie walidacji
+            first_name1 = form.cleaned_data.get('first_name')
+            last_name1 = form.cleaned_data.get('last_name')
+            username1 = form.cleaned_data.get('username')
+            password1 = form.cleaned_data.get('password')
+            user = authenticate(username=username1, password=password1)
+            if user is not None:
+                if user.is_active:
+                    if first_name1 and last_name1 and username1:
+                        u = User.objects.get(id=request.user.id)
+                        u.first_name = form.cleaned_data.get('first_name')
+                        u.last_name = form.cleaned_data.get('last_name')
+                        u.username = form.cleaned_data.get('username')
+                        u.save()
+                    return HttpResponse('Ustawienia zapisane')
+                else:
+                    form.add_error(None, "Niepoprawne dane")
+            else:
+                return HttpResponse('Niepoprawne hasło')
+        return render(request, "settings.html", locals())    

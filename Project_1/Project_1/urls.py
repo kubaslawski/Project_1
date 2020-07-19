@@ -34,4 +34,5 @@ urlpatterns = [
         activate, name='activate'),
     #profile
     path('user_profile/', ex_views.UserProfileView.as_view(), name="user_profile"),
+    path('settings/', ex_views.UserSettingsView.as_view(), name="settings"),
 ]

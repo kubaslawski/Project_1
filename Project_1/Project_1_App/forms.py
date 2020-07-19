@@ -29,3 +29,16 @@ class UserLoginForm(forms.Form):
 
 class CategoryDonationForm(forms.Form):
     categories = forms.ChoiceField(choices=category_choices, widget=forms.ChoiceField)
+
+
+class ProfileSettingsForm(forms.Form):
+    first_name = forms.CharField(label="imię", required=True, widget=forms.TextInput())
+    last_name = forms.CharField(label="nazwisko", required=True, widget=forms.TextInput())
+    username = forms.CharField(label="nazwa użytkownika", required=True, widget=forms.TextInput())
+    password = forms.CharField(label="hasło", required=True, widget=forms.PasswordInput())
+    
+    class Meta:
+        model = User 
+        fields = ('first_name', 'last_name', 'username', 'password')
+
+
