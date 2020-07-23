@@ -16,7 +16,7 @@
     <h2>Edytuj dane użytkownika</h2>
     <form method="post" action="">
       {% csrf_token %}
-      {% for field in form %}
+      {% for field in form1 %}
       <div class ="form-group">
         {{ field.label_tag }}
         {{ field }}
@@ -28,6 +28,25 @@
       <div class="form-group form-group--buttons">
         <a href="{% url 'base' %}" class="btn btn">Wróć do strony głównej</a>
         <button class="btn" type="submit">Edytuj</button>
+      </div>
+    </form>
+  </section>
+  <section class="login-page">
+    <h2>Zmień hasło</h2>
+    <form method="post" action="">
+      {% csrf_token %}
+      {% for field in form2 %}
+      <div class ="form-group">
+        {{ field.label_tag }}
+        {{ field }}
+        {% for error in field.errors %}
+          <p style="color: red"></p>
+        {% endfor %}  
+      </div>
+      {% endfor %}
+      <div class="form-group form-group--buttons">
+        <a href="{% url 'base' %}" class="btn btn">Wróć do strony głównej</a>
+        <button class="btn" type="submit">Zmień hasło</button>
       </div>
     </form>
   </section>

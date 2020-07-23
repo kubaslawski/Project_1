@@ -8,7 +8,12 @@ from .models import Category, Institution, Donation
 from django.db.models import Sum, Count
 import random 
 #forms
-from .forms import SignUpForm, UserLoginForm, CategoryDonationForm, ProfileSettingsForm
+from .forms import SignUpForm, UserLoginForm, CategoryDonationForm, ProfileSettingsForm, InstitutionDonationForm
+from .forms import AddFundationForm
+#django contrib
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 #Mail confirmation, signup & login
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -60,8 +65,51 @@ class LandingPage(View):
 
 class AddDonation(View):
     def get(self, request):
-        form = CategoryDonationForm()
+        form1 = CategoryDonationForm()
+        form2 = InstitutionDonationForm()
+        return render(request, "form.html",locals())
+
+    def post(self, request):
+        form1 = CategoryDonationForm(request.POST)
+        if form1.is_valid():
+            categories1 = form1.cleaned_data.get('categories')
+        quantity1 = request.POST.get('bags')    
+        form2 = InstitutionDonationForm(request.POST)
+        if form2.is_valid():
+            institutions1 = form2.cleaned_data.get('institution')
+        #other data
+        address1 = request.POST.get('address')
+        city1 = request.POST.get('city')
+        code1 = request.POST.get('postcode')
+        phone1 = request.POST.get('phone')
+        data1 = request.POST.get('data')
+        time1 = request.POST.get('time')
+        com1 = request.POST.get('more_info')
+        user1 = request.user.id 
+            
         return render(request, "form.html", locals())
+
+
+class AddFundation(View):
+    def get(self, request):
+        form =  AddFundationForm()
+        return render(request, 'add_fundation.html', locals())
+        
+    def post(self, request):
+        form = AddFundationForm(request.POST)
+        name1 = request.POST.get('name')
+        description1 = request.POST.get('description')
+        if form.is_valid(): # uruchomienie walidacji
+            type1 = form.cleaned_data.get('type')
+            categories1 = form.cleaned_data.get('categories')
+            if type1 and categories1:
+                i = Institution()
+                i.name = name1 
+                i.description = description1
+                i.type = type1 
+                i.save()
+                i.categories.set(categories1)
+        return render(request, 'add_fundation.html', locals())
 
 
 class Login(View):
@@ -132,6 +180,7 @@ class UserLoginView(View):
                 return redirect(reverse('register'))
         return render(request, "login.html", {'form': form})
 
+
 class UserLogoutView(View):
     def get(self, request):
         logout(request)
@@ -153,12 +202,13 @@ class UserProfileView(View):
 
 class UserSettingsView(View):
     def get(self, request):
-        form = ProfileSettingsForm()
+        form1 = ProfileSettingsForm()
+        form2 = PasswordChangeForm(request.user)
         return render(request, "settings.html", locals())
 
     def post(self, request):
-        form = ProfileSettingsForm(request.POST)
-        if form.is_valid(): # uruchomienie walidacji
+        form1 = ProfileSettingsForm(request.POST)
+        if form1.is_valid(): # uruchomienie walidacji
             first_name1 = form.cleaned_data.get('first_name')
             last_name1 = form.cleaned_data.get('last_name')
             username1 = form.cleaned_data.get('username')
@@ -168,13 +218,24 @@ class UserSettingsView(View):
                 if user.is_active:
                     if first_name1 and last_name1 and username1:
                         u = User.objects.get(id=request.user.id)
-                        u.first_name = form.cleaned_data.get('first_name')
-                        u.last_name = form.cleaned_data.get('last_name')
-                        u.username = form.cleaned_data.get('username')
+                        u.first_name = form1.cleaned_data.get('first_name')
+                        u.last_name = form1.cleaned_data.get('last_name')
+                        u.username = form1.cleaned_data.get('username')
                         u.save()
                     return HttpResponse('Ustawienia zapisane')
                 else:
                     form.add_error(None, "Niepoprawne dane")
             else:
                 return HttpResponse('Niepoprawne hasło')
-        return render(request, "settings.html", locals())    
+        form2 = PasswordChangeForm(request.user, request.POST)
+        if form2.is_valid():
+            user = form2.save()
+            update_session_auth_hash(request, user)  # Important!
+            return HttpResponse('Ustawienia zapisane')
+        else:
+            messages.error(request, 'Please correct the error below.')
+        return render(request, "settings.html", {'form2': form2})
+        
+
+
+

@@ -24,6 +24,7 @@
       <li><a href="#help" class="btn btn--without-border">Fundacje i organizacje</a></li>
       {% if user.is_authenticated %}
       <li><a href="{% url 'add_donation' %}" class="btn btn--without-border">Przekaż dary</a></li>
+      <li><a href="{% url 'add_fundation' %}" class="btn btn--without-border">Dodaj organizację</a></li>
       {% else %}
       <li><a href="{% url 'login' %}" class="btn btn--without-border">Przekaż dary</a></li>
       {% endif %}

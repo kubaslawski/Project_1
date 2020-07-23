@@ -1,0 +1,58 @@
+{% load static %}
+
+{% include 'base_forms.html' %}
+
+
+<section class="form--steps">
+
+
+    <div class="form--steps-instructions">
+      <div class="form--steps-container">
+        <h3>Ważne!</h3>
+        <p data-step="1" class="active">
+          Uzupełnij szczegóły dotyczące Twoich rzeczy. Dzięki temu będziemy
+          wiedzieć komu najlepiej je przekazać.
+        </p>
+        <p data-step="2">
+          Uzupełnij szczegóły dotyczące Twoich rzeczy. Dzięki temu będziemy
+          wiedzieć komu najlepiej je przekazać.
+        </p>
+        <p data-step="3">
+         Wybierz jedną, do
+          której trafi Twoja przesyłka.
+        </p>
+        <p data-step="4">Podaj adres oraz termin odbioru rzeczy.</p>
+      </div>
+    </div>
+    <div class="form--steps-container">
+        <form method="post" action="">
+            {% csrf_token %}
+        <div class="form--steps-counter">Krok <span>1</span>/5</div>
+
+          <!-- STEP 1: class .active is switching steps -->
+          <div data-step="1" class="">
+            <h3>Załóż fundację:</h3>
+            <div class="form-group form-group--inline">
+              <label> Nazwa <input type="text" name="name" id="name" /> </label>
+              <label> Opis <input type="text" name="description" id="description" /> </label>
+            </div>
+            <div class="form-group form-group--buttons">
+              <button type="button" class="btn next-step">Dalej</button>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div data-step="2">
+            <h3>Podaj typ fundacji oraz jej potrzeby</h3>
+            <div class="form-group form-group">
+            {{form}}
+            </div>
+            <div class="form-group form-group--buttons">
+                <button type="button" class="btn prev-step">Wstecz</button>
+            </div>
+            <button type="submit" class="btn">Potwierdzam</button>
+        </form>    
+        </div>
+    </div>
+    
+</section>    

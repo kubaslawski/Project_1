@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
-    
+    <script src="{% static 'js/app.js' %}"></script>
   </head>
   <body>
     <header class="header--form-page">
@@ -32,9 +32,10 @@
         </ul>
 
         <ul>
-          <li><a href="{% url 'base' %}" class="btn btn--without-border active">Start</a></li>
+          <li><a href="{% url 'base' %}" class="btn btn--without-border">Start</a></li>
           <li><a href="{% url 'base' %}#steps" class="btn btn--without-border">O co chodzi?</a></li>
           <li><a href="{% url 'base' %}#about-us" class="btn btn--without-border">O nas</a></li>
+          <li><a href="{% url 'add_fundation' %}" class="btn btn--without-border">Dodaj organizację</a></li>
           <li><a href="{% url 'base' %}#help" class="btn btn--without-border">Fundacje i organizacje</a></li>
           <li><a href="{% url 'add_donation' %}" class="btn btn--without-border">Przekaż dary</a></li>
           <li><a href="{% url 'base' %}#contact" class="btn btn--without-border">Kontakt</a></li>
@@ -92,65 +93,17 @@
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-        <form action="form-confirmation.html" method="post">
+        <form method="post" action="">
+          {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  name="categories"
-                  value="clothes-to-use"
-                />
-                <span class="checkbox"></span>
-                <span class="description"
-                  >ubrania, które nadają się do ponownego użycia</span
-                >
-              </label>
-            </div>
-
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  name="categories"
-                  value="clothes-useless"
-                />
-                <span class="checkbox"></span>
-                <span class="description">ubrania, do wyrzucenia</span>
-              </label>
-            </div>
-
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input type="checkbox" name="categories" value="toys" />
-                <span class="checkbox"></span>
-                <span class="description">zabawki</span>
-              </label>
-            </div>
-
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input type="checkbox" name="categories" value="books" />
-                <span class="checkbox"></span>
-                <span class="description">książki</span>
-              </label>
-            </div>
-
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input type="checkbox" name="categories" value="other" />
-                <span class="checkbox"></span>
-                <span class="description">inne</span>
-              </label>
-            </div>
-
+            {{form1}}
             <div class="form-group form-group--buttons">
               <button type="button" class="btn next-step">Dalej</button>
             </div>
           </div>
-
+        
           <!-- STEP 2 -->
           <div data-step="2">
             <h3>Podaj liczbę 60l worków, w które spakowałeś/aś rzeczy:</h3>
@@ -164,16 +117,17 @@
 
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
-              <button type="button" class="btn next-step">Dalej</button>
+              <button type="submit" class="btn next-step">Dalej</button>
             </div>
           </div>
 
 
-
+            
           <!-- STEP 4 -->
           <div data-step="3">
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
-
+            {{form2}}
+            <!--
             <div class="form-group form-group--checkbox">
               <label>
                 <input type="radio" name="organization" value="old" />
@@ -201,6 +155,7 @@
                 </span>
               </label>
             </div>
+            -->
 
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
@@ -222,13 +177,11 @@
                 <div class="form-group form-group--inline">
                   <label> Miasto <input type="text" name="city" /> </label>
                 </div>
-
                 <div class="form-group form-group--inline">
                   <label>
                     Kod pocztowy <input type="text" name="postcode" />
                   </label>
                 </div>
-
                 <div class="form-group form-group--inline">
                   <label>
                     Numer telefonu <input type="phone" name="phone" />
@@ -259,7 +212,7 @@
               <button type="button" class="btn next-step">Dalej</button>
             </div>
           </div>
-
+        </form>
           <!-- STEP 6 -->
           <div data-step="5">
             <h3>Podsumowanie Twojej darowizny</h3>
@@ -271,7 +224,7 @@
                   <li>
                     <span class="icon icon-bag"></span>
                     <span class="summary--text"
-                      >4 worki ubrań w dobrym stanie dla dzieci</span
+                      >{{quantity1}} worki ubrań w dobrym stanie dla dzieci</span
                     >
                   </li>
 
@@ -288,30 +241,28 @@
                 <div class="form-section--column">
                   <h4>Adres odbioru:</h4>
                   <ul>
-                    <li>Prosta 51</li>
-                    <li>Warszawa</li>
-                    <li>99-098</li>
-                    <li>123 456 789</li>
+                    <li>{{address1}}</li>
+                    <li>{{city1}}</li>
+                    <li>{{code1}}</li>
+                    <li>{{phone1}}</li>
                   </ul>
                 </div>
 
                 <div class="form-section--column">
                   <h4>Termin odbioru:</h4>
                   <ul>
-                    <li>13/12/2018</li>
-                    <li>15:40</li>
-                    <li>Brak uwag</li>
+                    <li>{{data1}}</li>
+                    <li>{{time1}}</li>
+                    <li>{{com1}}</li>
                   </ul>
                 </div>
               </div>
             </div>
-
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
               <button type="submit" class="btn">Potwierdzam</button>
             </div>
           </div>
-        </form>
       </div>
     </section>
 

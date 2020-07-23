@@ -1,11 +1,20 @@
 from django import forms
-from .models import Category 
+from .models import Category, Institution, Donation 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 
 category_choices = [(c.id, c.name)
                     for c in Category.objects.all()]
+
+institution_choices = [(i.id, i.name)
+                      for i in Institution.objects.all()]
+
+type_of_organization =  (
+    ('1', "Fundacja"),
+    ('2', "Organizacja pozarządowa"),
+    ('3', "Zbiórka lokalna"),
+)    
 
 
 
@@ -26,9 +35,12 @@ class UserLoginForm(forms.Form):
     class Meta:
         model = User 
         fields = ('username', 'password')
-
+#Donation (form.html)
 class CategoryDonationForm(forms.Form):
-    categories = forms.ChoiceField(choices=category_choices, widget=forms.ChoiceField)
+    categories = forms.MultipleChoiceField(choices=category_choices, widget=forms.CheckboxSelectMultiple)
+
+class InstitutionDonationForm(forms.Form):
+    institutions = forms.ChoiceField(choices=institution_choices)
 
 
 class ProfileSettingsForm(forms.Form):
@@ -41,4 +53,11 @@ class ProfileSettingsForm(forms.Form):
         model = User 
         fields = ('first_name', 'last_name', 'username', 'password')
 
+class AddFundationForm(forms.Form):
+    type = forms.ChoiceField(choices=type_of_organization)
+    categories = forms.MultipleChoiceField(choices=category_choices, widget=forms.CheckboxSelectMultiple)
+
+    class Meta:
+        model = Institution
+        fields = ('type', 'categories')
 
