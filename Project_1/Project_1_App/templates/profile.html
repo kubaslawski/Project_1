@@ -23,10 +23,27 @@
       <div class="stats--item">
         
        
-        <h3>Wspartych organizacji: <em>{{supp_fund}}</em></h3>
+        <h3>Wspartych organizacji: <br> <em>{{supp_fund}}</em></h3>
         {% for bag in bag_per_fund %}
           <p>{{bag.institution_id}}:{{bag.quantity__sum}}</p>
         {% endfor %}  
+      </div>
+
+      <div class="stats--item">
+        <h3>Przekazane dary:</h3>
+        {% for donate in all_donations %}
+        <h4>Ilość worków: {{donate.quantity}}</h4>
+        <h4>Dla organizacji: {{donate.institution}}</h4>
+        <h4>Rodzaj darów: {% for c in donate.categories.all %} {{c}}, {% endfor %}</h4>
+        <h4>Termin odbioru: 
+          {% if donate.pick_up_time.exists %}
+          {{donate.pick_up_time}}
+          {% else %}
+          Nie podano
+          {% endif %}
+        </h4>
+        <br>
+        {% endfor %}
       </div>
 
     </div>

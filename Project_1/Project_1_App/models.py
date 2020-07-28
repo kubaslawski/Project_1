@@ -10,14 +10,11 @@ class Category(models.Model):
         return self.name
 
 
-type_of_organization =  (
+type_of_organization = (
     ('1', "Fundacja"),
     ('2', "Organizacja pozarządowa"),
     ('3', "Zbiórka lokalna"),
 )
-
-
-
 
 
 class Institution(models.Model):
@@ -28,6 +25,7 @@ class Institution(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Donation(models.Model):
     quantity = models.IntegerField()
@@ -41,5 +39,5 @@ class Donation(models.Model):
     pick_up_time = models.DateTimeField(null=True, blank=True)
     pick_up_comment = models.CharField(max_length=256)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    is_taken = models.BooleanField(default=False)
 
-    

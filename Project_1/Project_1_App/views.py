@@ -9,7 +9,7 @@ from django.db.models import Sum, Count
 import random 
 #forms
 from .forms import SignUpForm, UserLoginForm, CategoryDonationForm, ProfileSettingsForm, InstitutionDonationForm
-from .forms import AddFundationForm
+from .forms import AddFundationForm, AddFundationForm, AddInstitutionForm
 #django contrib
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -66,49 +66,83 @@ class LandingPage(View):
 class AddDonation(View):
     def get(self, request):
         form1 = CategoryDonationForm()
-        form2 = InstitutionDonationForm()
+        form2 = AddInstitutionForm()
         return render(request, "form.html",locals())
 
     def post(self, request):
         form1 = CategoryDonationForm(request.POST)
         if form1.is_valid():
             categories1 = form1.cleaned_data.get('categories')
+        print(form1.is_valid(), categories1)
         quantity1 = request.POST.get('bags')    
-        form2 = InstitutionDonationForm(request.POST)
+        form2 = AddInstitutionForm(request.POST)
         if form2.is_valid():
-            institutions1 = form2.cleaned_data.get('institution')
+            institutions1 = form2.cleaned_data.get('type')
+        print(form2.is_valid(), institutions1)
         #other data
         address1 = request.POST.get('address')
+        print(address1)
         city1 = request.POST.get('city')
+        print(city1)
         code1 = request.POST.get('postcode')
+        print(code1)
         phone1 = request.POST.get('phone')
+        print(phone1)
         data1 = request.POST.get('data')
+        print(data1)
         time1 = request.POST.get('time')
+        print(time1)
         com1 = request.POST.get('more_info')
+        print(com1)
         user1 = request.user.id 
+        print(user1)
+        if categories1 and quantity1 and institutions1 and address1 and city1 and code1 and phone1 and user1:
+            print('Truue')
+            d = Donation()
+            d.quantity = quantity1
+            d.institution_id = institutions1
+            d.address = address1
+            d.phone_number = phone1
+            d.city = city1
+            d.zip_code = code1
+            d.pick_up_date = data1
+            d.pick_up_time = data1 + " " + time1
+            d.pick_up_comment = com1
+            d.user_id = user1 
+            d.save()
+            d.categories.set(categories1)
+        else:
+            print('FASLE')
             
         return render(request, "form.html", locals())
+
+class DonationFormConfirmationView(View):
+    def get(self, request):
+        return render(request, "form-confirmation.html")     
+
+    def post(self, request):
+        return render(request, "form-confirmation.html")   
 
 
 class AddFundation(View):
     def get(self, request):
-        form =  AddFundationForm()
+        form1 = AddFundationForm()
         return render(request, 'add_fundation.html', locals())
         
     def post(self, request):
-        form = AddFundationForm(request.POST)
+        form1 = AddFundationForm(request.POST)
         name1 = request.POST.get('name')
         description1 = request.POST.get('description')
-        if form.is_valid(): # uruchomienie walidacji
-            type1 = form.cleaned_data.get('type')
-            categories1 = form.cleaned_data.get('categories')
-            if type1 and categories1:
+        if form1.is_valid(): # uruchomienie walidacji
+            type1 = form1.cleaned_data.get('type')
+            category1 = form1.cleaned_data.get('categories')
+            if type1 and category1 and name1 and description1:
                 i = Institution()
                 i.name = name1 
                 i.description = description1
                 i.type = type1 
                 i.save()
-                i.categories.set(categories1)
+                i.categories.set(category1)
         return render(request, 'add_fundation.html', locals())
 
 
@@ -190,6 +224,7 @@ class UserLogoutView(View):
 class UserProfileView(View):
     def get(self, request):
         logged_user = User.objects.get(id=request.user.id)
+        all_donations = Donation.objects.filter(user_id=request.user.id)
         #num of bags
         donation_quantity = Donation.objects.filter(user_id=request.user.id)
         dq = donation_quantity.aggregate(total=Sum('quantity'))

@@ -234,7 +234,79 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
+      //add donation
+      var bagQuantity = document.getElementById('bags').value;
 
+
+      var insArrName = []
+      var insArrId = []
+      var InstitutionInputs = document.getElementsByName('institutions')
+      for (var i=0; i<InstitutionInputs.length; i++) {
+        if (InstitutionInputs[i].checked) {
+          var insId = InstitutionInputs[i].value;
+          var insName = InstitutionInputs[i].parentElement.innerText;
+          insArrId.push(insId)
+          insArrName.push(insName)
+        }
+      }
+
+      document.getElementById("summary-institutions").innerHTML = insArrName.join(", ")
+
+      var catArrName = []
+      var catArrId = []
+      var categoryInputs = document.getElementsByName('categories') // marks all the inputs
+      for (var i=0; i<categoryInputs.length; i++) {
+        if (categoryInputs[i].checked) {
+          var catId = categoryInputs[i].value;
+          var catName = categoryInputs[i].parentElement.innerText;
+          catArrName.push(catName)
+          catArrId.push(catId)
+        }
+      }
+
+      var bagQuantity = document.getElementById('bags').value;
+      document.getElementById('summary-quantity').innerHTML = "Oddajesz " + bagQuantity + " worków" + catArrName.join(", ") 
+      var type = document.getElementById('id_type').value;
+
+      document.getElementById("summary-institutions").innerHTML = type
+
+
+      var street = document.getElementById('street').value;
+      var city = document.getElementById('city').value;
+      var postcode = document.getElementById('postcode').value;
+      var phone = document.getElementById('phone').value;
+      var data = document.getElementById('data').value;
+      var time = document.getElementById('time').value;
+      var comment = document.getElementById('comment').value;
+
+      document.getElementById('street-summary').innerHTML = "Ulica: " + street
+      document.getElementById('city-summary').innerHTML = "Miasto: " + city
+      document.getElementById('postcode-summary').innerHTML = "Kod pocztowy: " + postcode
+      document.getElementById('phone-summary').innerHTML = "Telefon: " + phone
+      document.getElementById('data-summary').innerHTML = "Data: " + data
+      document.getElementById('time-summary').innerHTML = "Czas: " + time
+      document.getElementById('comment-summary').innerHTML = "Komentarze: " + comment
+ 
+      new Request ({
+        url: "{% url 'add_donation' %}",
+        method: "post",
+        data: {
+          "quantity": bagQuantity,
+          "categories": catArrId.join(", "),
+          "institution": catId,
+          "address": street,
+          "city": city,
+          "phone_number": phone,
+          "zip_code": postcode,
+          "pick_up_data": time,
+          "pick_up_time": time,
+          "pick_up_comment": comment,
+        }
+      })
+
+
+
+  
       // TODO: get data from inputs and show them in summary
     }
 
@@ -243,8 +315,10 @@ document.addEventListener("DOMContentLoaded", function() {
      *
      * TODO: validation, send data to server
      */
+
+
+
     submit(e) {
-      e.preventDefault();
       this.currentStep++;
       this.updateForm();
     }

@@ -98,7 +98,7 @@
               <div class="subtitle">Cel i misja: {{f.description}}</div>
             </div>
 
-            <div class="col"><div class="text">{% for c in f.categories.all %} {{c}} {% endfor %}</div></div>
+            <div class="col"><div class="text">{% for c in f.categories.all %} {{c}}, {% endfor %}</div></div>
           </li>
           {% endfor %}
           <div class="pagination">

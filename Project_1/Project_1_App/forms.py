@@ -39,9 +39,16 @@ class UserLoginForm(forms.Form):
 class CategoryDonationForm(forms.Form):
     categories = forms.MultipleChoiceField(choices=category_choices, widget=forms.CheckboxSelectMultiple)
 
-class InstitutionDonationForm(forms.Form):
-    institutions = forms.ChoiceField(choices=institution_choices)
+    class Meta:
+        model = Donation
+        fields = ('categories')
 
+class InstitutionDonationForm(forms.Form):
+    institutions = forms.ChoiceField(choices=institution_choices, widget=forms.CheckboxSelectMultiple)
+
+    class Meta:
+        model = Donation
+        fields = ('type')
 
 class ProfileSettingsForm(forms.Form):
     first_name = forms.CharField(label="imię", required=True, widget=forms.TextInput())
@@ -60,4 +67,8 @@ class AddFundationForm(forms.Form):
     class Meta:
         model = Institution
         fields = ('type', 'categories')
+
+#test for institution validation 'add donation' 
+class AddInstitutionForm(forms.Form):
+    type = forms.ChoiceField(choices=institution_choices)
 

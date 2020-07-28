@@ -25,6 +25,7 @@ urlpatterns = [
     path('', ex_views.LandingPage.as_view(), name="base"),
     path('form/', ex_views.AddDonation.as_view(), name="add_donation"),
     path('add_fundation/', ex_views.AddFundation.as_view(), name="add_fundation"),
+    path('form_confirmation/', ex_views.DonationFormConfirmationView.as_view(), name="form-confirmation"),
     #login/logut
     path('login/', ex_views.UserLoginView.as_view(), name="login"),
     path('logout/', ex_views.UserLogoutView.as_view(), name="logout"),
@@ -36,4 +37,4 @@ urlpatterns = [
     #profile
     path('user_profile/', ex_views.UserProfileView.as_view(), name="user_profile"),
     path('settings/', ex_views.UserSettingsView.as_view(), name="settings"),
-]
+ ]
