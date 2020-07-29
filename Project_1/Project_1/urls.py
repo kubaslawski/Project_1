@@ -18,6 +18,7 @@ from django.urls import path, re_path, include
 #views
 from Project_1_App import views as ex_views
 from Project_1_App.views import LandingPage, signup, activate
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     #api
@@ -40,4 +41,20 @@ urlpatterns = [
     #profile
     path('user_profile/', ex_views.UserProfileView.as_view(), name="user_profile"),
     path('settings/', ex_views.UserSettingsView.as_view(), name="settings"),
+    #forgotten password
+    path('reset_password/',
+         auth_views.PasswordResetView.as_view(template_name="password_reset/password_reset.html"),
+         name="reset_password"),
+
+    path('reset_password_sent/',
+         auth_views.PasswordResetDoneView.as_view(template_name="password_reset/password_reset_sent.html"),
+         name="password_reset_done"),
+
+    path('reset/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(template_name="password_reset/password_reset_form.html"),
+         name="password_reset_confirm"),
+
+    path('reset_password_complete/',
+         auth_views.PasswordResetCompleteView.as_view(template_name="password_reset/password_reset_complete.html"),
+         name="password_reset_complete"),
  ]

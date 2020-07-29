@@ -2,6 +2,7 @@ from django import forms
 from .models import Category, Institution, Donation 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core.validators import EmailValidator, URLValidator, validate_email
 
 
 category_choices = [(c.id, c.name)
