@@ -30,8 +30,12 @@
       </div>
 
       <div class="stats--item">
-        <h3>Przekazane dary:</h3>
-        {% for donate in all_donations %}
+        <h3>Przekazane dary do odbioru: 
+          <br> <br>
+          <h2>{{all_donations_not_taken_count}}</h2>
+        </h3>
+        <p name="taken_items">
+        {% for donate in all_donations_not_taken %}
         <h4>Ilość worków: {{donate.quantity}}</h4>
         <h4>Dla organizacji: {{donate.institution}}</h4>
         <h4>Rodzaj darów: {% for c in donate.categories.all %} {{c}}, {% endfor %}</h4>
@@ -42,8 +46,50 @@
           Nie podano
           {% endif %}
         </h4>
+        <h4>
+          <form action="" method="post">
+          {% csrf_token %}
+          {% if donate.is_taken == False %}
+             <br>
+              <button type="submit" class="btn" name="taken_or_not" value="{{donate.id}}" >Oznacz jako zabrane</button>
+          {% else %}
+              <button type="submit" class="btn" name="taken_or_not" value="{{donate.is_taken}}">Oznacz jako niezabrane</button>       
+          {% endif %}
+          </form>
         <br>
         {% endfor %}
+        </p>
+      </div>
+      <div class="stats--item">
+        <h3>Odebrane dary: 
+          <br> <br>
+          <h2>{{all_donations_taken_count}}</h2>
+        </h3>
+        <p name="taken_items">
+          {% for donate in all_donations_taken %}
+          <h4>Ilość worków: {{donate.quantity}}</h4>
+          <h4>Dla organizacji: {{donate.institution}}</h4>
+          <h4>Rodzaj darów: {% for c in donate.categories.all %} {{c}}, {% endfor %}</h4>
+          <h4>Termin odbioru: 
+            {% if donate.pick_up_time.exists %}
+            {{donate.pick_up_time}}
+            {% else %}
+            Nie podano
+            {% endif %}
+          </h4>
+          <h4>
+            <form action="" method="post">
+            {% csrf_token %}
+            {% if donate.is_taken == False %}
+               <br>
+                <button type="submit" class="btn" name="taken_or_not" value="{{donate.id}}" >Oznacz jako zabrane</button>
+            {% else %}
+                <button type="submit" class="btn" name="taken_or_not" value="{{donate.id}}">Oznacz jako niezabrane</button>       
+            {% endif %}
+            </form>
+          <br>
+          {% endfor %}
+          </p>
       </div>
 
     </div>
