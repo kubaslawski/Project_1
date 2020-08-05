@@ -9,7 +9,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-
+    
 type_of_organization = (
     ('1', "Fundacja"),
     ('2', "Organizacja pozarządowa"),

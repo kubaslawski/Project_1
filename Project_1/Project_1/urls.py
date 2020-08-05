@@ -19,6 +19,7 @@ from django.urls import path, re_path, include
 from Project_1_App import views as ex_views
 from Project_1_App.views import LandingPage, signup, activate
 from django.contrib.auth import views as auth_views
+from Project_1_App.forms import EmailValidationOnForgotPassword
 
 urlpatterns = [
     #api
@@ -43,7 +44,7 @@ urlpatterns = [
     path('settings/', ex_views.UserSettingsView.as_view(), name="settings"),
     #forgotten password
     path('reset_password/',
-         auth_views.PasswordResetView.as_view(template_name="password_reset/password_reset.html"),
+         auth_views.PasswordResetView.as_view(form_class=EmailValidationOnForgotPassword, template_name="password_reset/password_reset.html"),
          name="reset_password"),
 
     path('reset_password_sent/',

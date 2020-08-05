@@ -72,22 +72,22 @@
       <div class="about-us--text">
         <h2>O nas</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas vitae animi rem pariatur incidunt libero optio esse quisquam illo omnis.</p>
-        <img src="images/signature.svg" class="about-us--text-signature" alt="Signature" />
+        <img src="{% static 'images/signature.svg' %}" class="about-us--text-signature" alt="Signature" />
       </div>
-      <div class="about-us--image"><img src="images/about-us.jpg" alt="People in circle" /></div>
+      <div class="about-us--image"><img src="{% static 'images/about-us.jpg' %}" alt="People in circle" /></div>
     </section>
 
      <section id="help" class="help">
       <h2>Komu pomagamy?</h2>
 
       <ul class="help--buttons">
-        <li data-id="1"><a href="{% url 'base' %}#help" class="btn btn--without-border active">Fundacjom</a></li>
-        <li data-id="2"><a href="{% url 'base' %}#help" class="btn btn--without-border ">Organizacjom pozarządowym</a></li>
-        <li data-id="3"><a href="{% url 'base' %}#help" class="btn btn--without-border ">Lokalnym zbiórkom</a></li>
+        <li data-id="1"><a href="{% url 'base' %}#help"  class="btn btn--without-border active">Fundacjom</a></li>
+        <li data-id="2"><a href="{% url 'base' %}#help"  class="btn btn--without-border ">Organizacjom pozarządowym</a></li>
+        <li data-id="3"><a href="{% url 'base' %}#help"  class="btn btn--without-border ">Lokalnym zbiórkom</a></li>
       </ul>
 
       <!-- SLIDE 1 -->
-      <div class="help--slides active" data-id="1">
+      <div class="btn help--slides active" data-id="1">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
       
         <ul class="help--slides-items">
@@ -131,7 +131,7 @@
 
 
       <!-- SLIDE 2 -->
-      <div class="help--slides" data-id="2">
+      <div class="btn help--slides" data-id="2">
         <p>
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Hic officiis mollitia dolor, neque aspernatur accusamus debitis. Ducimus, officia. Quia, sunt illum! Non iste placeat ab ipsum alias
           quos suscipit corporis!
@@ -161,7 +161,7 @@
       </div>
 
       <!-- SLIDE 3 -->
-      <div class="help--slides" data-id="3">
+      <div class="btn help--slides" data-id="3">
         <p>Lorem ipsum dolor sit amet, his ocurreret persequeris ea, ad utinam laudem duo. Verterem adipisci partiendo eos ne, ea his reque quaeque recteque, ne quo lobortis intellegam.</p>
         <ul class="help--slides-items">
           {% for n in ng %}
@@ -201,12 +201,10 @@
       <div class="bottom-line">
         <span class="bottom-line--copy">Copyright &copy; 2019</span>
         <div class="bottom-line--icons">
-          <a href="#" class="btn btn--small"><img src="images/icon-facebook.svg"/></a>
-          <a href="#" class="btn btn--small"><img src="images/icon-instagram.svg"/></a>
+          <a href="#" class="btn btn--small"><img src="{% static 'images/icon-facebook.svg' %}"/></a>
+          <a href="#" class="btn btn--small"><img src="{% static 'images/icon-instagram.svg' %}"/></a>
         </div>
       </div>
     </footer>
-
-    <script src="js/app.js"></script>
   </body>
 </html>

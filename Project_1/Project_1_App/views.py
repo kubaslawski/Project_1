@@ -33,15 +33,12 @@ class LandingPage(View):
         #total supported organizations count
         ti = Donation.objects.values('institution_id').annotate(total_i=Count('institution_id'))
         total_institutions = len(ti)
-        #fundations 
-        fundations = Institution.objects.filter(type='1')
-        fu = []
-        for obj in fundations:
-            fu.append(obj)
-        random.shuffle(fu)
-        paginator1 = Paginator(fu, 5)
+        #foundations 
+        foundations = Institution.objects.filter(type='1')
+        paginator1 = Paginator(foundations, 3)
         page = request.GET.get('page')
         fdt = paginator1.get_page(page)
+        # brak informacji na której zakładace znajduje się użytkownik
         #NGO
         ngos = Institution.objects.filter(type='2')
         ng = []
@@ -62,10 +59,21 @@ class LandingPage(View):
         lct = paginator3.get_page(page)    
         return render(request, "index.html", locals())
 
+#Wczytać instytucje
+
+
+#Nowy widok z nowym adresem url 
+def add_donation_form(request):
+    categories = json.loads(request.raw_post_data)
+    print(categories)
+    return 
+
+
 
 class AddDonation(View):
     def get(self, request):
         form1 = CategoryDonationForm()
+        # Tylko jeden formularz 
         form2 = AddInstitutionForm()
         return render(request, "form.html",locals())
 
@@ -122,51 +130,7 @@ class DonationFormConfirmationView(View):
         return render(request, "form-confirmation.html")     
 
     def post(self, request):
-        print('TRRRRUE')
-        form1 = CategoryDonationForm(request.POST)
-        if form1.is_valid():
-            categories1 = form1.cleaned_data.get('categories')
-        print(form1.is_valid(), categories1)
-        quantity1 = request.POST.get('bags')    
-        form2 = AddInstitutionForm(request.POST)
-        if form2.is_valid():
-            institutions1 = form2.cleaned_data.get('type')
-        print(form2.is_valid(), institutions1)
-        #other data
-        address1 = request.POST.get('address')
-        print(address1)
-        city1 = request.POST.get('city')
-        print(city1)
-        code1 = request.POST.get('postcode')
-        print(code1)
-        phone1 = request.POST.get('phone')
-        print(phone1)
-        data1 = request.POST.get('data')
-        print(data1)
-        time1 = request.POST.get('time')
-        print(time1)
-        com1 = request.POST.get('more_info')
-        print(com1)
-        user1 = request.user.id 
-        print(user1)
-        if categories1 and quantity1 and institutions1 and address1 and city1 and code1 and phone1 and user1:
-            print('Truue')
-            d = Donation()
-            d.quantity = quantity1
-            d.institution_id = institutions1
-            d.address = address1
-            d.phone_number = phone1
-            d.city = city1
-            d.zip_code = code1
-            d.pick_up_date = data1
-            d.pick_up_time = data1 + " " + time1
-            d.pick_up_comment = com1
-            d.user_id = user1 
-            d.save()
-            d.categories.set(categories1)
-        else:
-            print('FASLE')
-        return render(request, "form-confirmation.html", locals())   
+        return render(request, "form-confirmation.html")   
 
 
 class AddFundation(View):
@@ -260,10 +224,13 @@ class UserLoginView(View):
     def post(self, request):
         form = UserLoginForm(request.POST)
         if form.is_valid(): # uruchomienie walidacji
-            username = form.cleaned_data.get('username')
+            user_email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
+            obj = User.objects.get(email=user_email)
+            username = obj.username
             user = authenticate(username=username, password=password)
             if user is not None:
+            # podwójne zaprzeczenie, ustawić na odwrót
                 if user.is_active:
                     login(request, user)
                     return redirect(reverse('base'))
@@ -284,28 +251,30 @@ class UserProfileView(View):
     def get(self, request):
         logged_user = User.objects.get(id=request.user.id)
         all_donations_not_taken = Donation.objects.filter(user_id=request.user.id).filter(is_taken=False)
-        all_donations_not_taken_count = all_donations_not_taken.count()
         all_donations_taken = Donation.objects.filter(user_id=request.user.id).filter(is_taken=True)
-        all_donations_taken_count = all_donations_taken.count()
+        all_donations = Donation.objects.filter(user_id=request.user.id).count()
         #num of bags
         donation_quantity = Donation.objects.filter(user_id=request.user.id)
         dq = donation_quantity.aggregate(total=Sum('quantity'))
         dq_total = dq['total']
         #num of supported org.
         supp_fund = len(Donation.objects.filter(user_id=request.user.id).values('institution_id').annotate(total=Count('institution_id')))
-        bag_per_fund = Donation.objects.filter(user_id=request.user.id).values('institution_id').annotate(Sum('quantity'))
+        bag_per_fund = Donation.objects.filter(user_id=request.user.id).values('institution__name').annotate(total=Sum('quantity'))
+        print(bag_per_fund)
         return render(request, "profile.html", locals())
     
     def post(self, request):
         id = request.POST.get('taken_or_not')
+        print(id)
         d = Donation.objects.get(id=id)
         if d.is_taken == False:
             d.is_taken = True
             d.save()
+            return redirect('user_profile')
         else:
             d.is_taken = False
             d.save()
-        print(d.id, d.is_taken)
+            return redirect('user_profile')
         return render(request, "profile.html", locals())
 
 class UserSettingsView(View):
@@ -344,6 +313,4 @@ class UserSettingsView(View):
             messages.error(request, 'Please correct the error below.')
         return render(request, "settings.html", {'form2': form2})
         
-
-
 

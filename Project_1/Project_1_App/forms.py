@@ -2,8 +2,7 @@ from django import forms
 from .models import Category, Institution, Donation 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.core.validators import EmailValidator, URLValidator, validate_email
-
+from django.contrib.auth.forms import PasswordResetForm
 
 category_choices = [(c.id, c.name)
                     for c in Category.objects.all()]
@@ -30,7 +29,7 @@ class SignUpForm(UserCreationForm):
 
 
 class UserLoginForm(forms.Form):
-    username = forms.CharField(label='username')
+    email = forms.CharField(label='email')
     password = forms.CharField(label='Hasło', widget=forms.PasswordInput)
 
     class Meta:
@@ -72,4 +71,16 @@ class AddFundationForm(forms.Form):
 #test for institution validation 'add donation' 
 class AddInstitutionForm(forms.Form):
     type = forms.ChoiceField(choices=institution_choices)
+
+
+
+class EmailValidationOnForgotPassword(PasswordResetForm):
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email__iexact=email, is_active=True).exists():
+            msg = ("There is no user registered with the specified E-Mail address.")
+            self.add_error('email', msg)
+        return email
+
 

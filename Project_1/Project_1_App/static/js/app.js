@@ -36,22 +36,28 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     changeSlide(e) {
-      e.preventDefault();
       const $btn = e.target;
 
       // Buttons Active class change
       [...this.$buttonsContainer.children].forEach(btn => btn.firstElementChild.classList.remove("active"));
       $btn.classList.add("active");
 
+
       // Current slide
       this.currentSlide = $btn.parentElement.dataset.id;
 
+
       // Slides active class change
       this.$slidesContainers.forEach(el => {
+        console.log(el.classList);
         el.classList.remove("active");
+        console.log(el.classList);
+
 
         if (el.dataset.id === this.currentSlide) {
           el.classList.add("active");
+          //console.log(el.dataset.id);
+          //console.log(el.classList);
         }
       });
     }
@@ -60,7 +66,6 @@ document.addEventListener("DOMContentLoaded", function() {
      * TODO: callback to page change event
      */
     changePage(e) {
-      e.preventDefault();
       const page = e.target.dataset.page;
 
       console.log(page);
@@ -263,6 +268,39 @@ document.addEventListener("DOMContentLoaded", function() {
           catArrId.push(catId)
         }
       }
+      console.log(catArrId)
+
+      var catArrIdString = JSON.stringify(catArrId)
+      if(catArrId.length>0){
+        $.ajax({
+          type: "POST",
+          url: "/form",
+          dataType: "json",
+          data: {
+            "categories": catArrIdString
+          },
+          success: function (data) {
+            alert('Success');
+          },
+          error: function () {
+            alert('Error');
+          }
+        });
+      }
+
+      
+
+
+      //warunek 
+      
+            //aktualizacja widoku
+            //na podstawie kategorii renderujemy instytucje - metoda POST (JSON)
+            //Wysłanie słownika: id: "name"
+            //nowy div - usunąć, dodanie nowych 
+            //Usunięcie starej zawartości 
+            //DOM 
+            //Radio buttons 
+
 
       var bagQuantity = document.getElementById('bags').value;
       document.getElementById('summary-quantity').innerHTML = "Oddajesz " + bagQuantity + " worków" + catArrName.join(", ") 
@@ -303,19 +341,8 @@ document.addEventListener("DOMContentLoaded", function() {
           "pick_up_comment": comment,
         }
       })
-
-
-
-  
-      // TODO: get data from inputs and show them in summary
+    
     }
-
-    /**
-     * Submit form
-     *
-     * TODO: validation, send data to server
-     */
-
 
 
     submit(e) {
@@ -344,10 +371,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     return cookieValue;
 
-    $.ajax({
-      url: "profile.html",
-      
-    })
+
 }
 
 
