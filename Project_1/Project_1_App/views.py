@@ -3,6 +3,7 @@ from django.views import View
 from django.core.paginator import Paginator
 from django.urls import reverse, reverse_lazy 
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 # Create your views here.
 from .models import Category, Institution, Donation
 from django.db.models import Sum, Count
@@ -23,6 +24,8 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login, authenticate, logout
+from django.core.mail import send_mail
+from django.core.mail import BadHeaderError
 
 #Homepage
 class LandingPage(View):
@@ -58,15 +61,34 @@ class LandingPage(View):
         page = request.GET.get('page')
         lct = paginator3.get_page(page)    
         return render(request, "index.html", locals())
+    def post(self, request):
+        first_name = request.POST.get('contact-first-name')
+        last_name = request.POST.get('contact-last-name')
+        text = request.POST.get('contact-text')
+        email = request.user.email
+        try:
+            send_mail(
+            'CONTACT',
+            text,
+            email,
+            ['kubaslawski.webdeveloper@gmail.com'],
+            fail_silently=False,
+            )
+        except BadHeaderError:
+            return HttpResponse('Invalid header found.')
+        return render(request, "base.html")
 
 #Wczytać instytucje
 
 
-#Nowy widok z nowym adresem url 
-def add_donation_form(request):
-    categories = json.loads(request.raw_post_data)
-    print(categories)
-    return 
+
+def validate_categories(request):
+    obj = request.GET.get('categories', '')
+    import json
+    obj: list[int] = json.loads(obj)
+    qs = Institution.objects.filter(categories__in=obj)
+
+    return JsonResponse({institution.name: institution.id for institution in qs})
 
 
 
@@ -74,19 +96,14 @@ class AddDonation(View):
     def get(self, request):
         form1 = CategoryDonationForm()
         # Tylko jeden formularz 
-        form2 = AddInstitutionForm()
         return render(request, "form.html",locals())
 
     def post(self, request):
         form1 = CategoryDonationForm(request.POST)
         if form1.is_valid():
             categories1 = form1.cleaned_data.get('categories')
-        print(form1.is_valid(), categories1)
         quantity1 = request.POST.get('bags')    
-        form2 = AddInstitutionForm(request.POST)
-        if form2.is_valid():
-            institutions1 = form2.cleaned_data.get('type')
-        print(form2.is_valid(), institutions1)
+        institutions1 = request.POST.get('') 
         #other data
         address1 = request.POST.get('address')
         print(address1)
@@ -168,10 +185,6 @@ class DonateView(View):
             return render(request, "donate.html", locals())
 
 
-
-class Login(View):
-    def get(self, request):
-        return render(request, "login.html", )
 
 
 def signup(request):
@@ -313,4 +326,6 @@ class UserSettingsView(View):
             messages.error(request, 'Please correct the error below.')
         return render(request, "settings.html", {'form2': form2})
         
+
+
 

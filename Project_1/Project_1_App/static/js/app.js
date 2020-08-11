@@ -268,25 +268,47 @@ document.addEventListener("DOMContentLoaded", function() {
           catArrId.push(catId)
         }
       }
-      console.log(catArrId)
-
-      var catArrIdString = JSON.stringify(catArrId)
-      if(catArrId.length>0){
+      //console.log(catArrId)
+      
+      var catArrIdInt = catArrId.map(v => parseInt(v, 10));
+      //console.log(catArrIdInt)
+       
+      
+      var catArrIdString = JSON.stringify(catArrIdInt)
+      if (catArrId.length > 0) {
         $.ajax({
-          type: "POST",
-          url: "/form",
+          type: "GET",
+          url: "/ajax/validate_categories/",
           dataType: "json",
           data: {
             "categories": catArrIdString
-          },
-          success: function (data) {
-            alert('Success');
-          },
-          error: function () {
-            alert('Error');
           }
-        });
+        }).done(function(institutionsByName) {
+          console.log(institutionsByName)
+          for (var [key, value] of Object.entries(institutionsByName)){
+            console.log(`${key}: ${value}`);
+            document.getElementById("institution-checkbox").innerHTML += 
+            '<label>' +
+            '<input type="radio" name="organization" value="inst" id="institution" />' +
+            '<span class="checkbox radio"></span>' + 
+            '<span class="description">' + 
+              '<div class="title">'+ `${key}`  +'</div>' +
+              '<div class="subtitle">' + 
+                'Cel i misja: Pomoc dla osób nie posiadających miejsca' + 
+                'zamieszkania' +
+              '</div>' +
+            '</span>' + 
+          '</label>'
+        
+          }
+        })
+        .fail(function(e) {
+          alert( "error" );
+          console.log(e)
+        })
       }
+
+
 
       
 
@@ -304,9 +326,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
       var bagQuantity = document.getElementById('bags').value;
       document.getElementById('summary-quantity').innerHTML = "Oddajesz " + bagQuantity + " worków" + catArrName.join(", ") 
-      var type = document.getElementById('id_type').value;
+      //var type = document.getElementById('id_type').value;
 
-      document.getElementById("summary-institutions").innerHTML = type
+      //document.getElementById("summary-institutions").innerHTML = type
 
 
       var street = document.getElementById('street').value;

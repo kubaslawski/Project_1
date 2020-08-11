@@ -131,11 +131,11 @@
           <!-- STEP 4 -->
           <div data-step="3">
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
-          
+
             
-            <div class="form-group form-group--checkbox" id="institution-checkbox">
-              <!--<label>
-                <input type="radio" name="organization" value="old" id="institution" />
+            <div class="form-group form-group--checkbox">
+              <label>
+                <input type="radio" name="organization" value="old" />
                 <span class="checkbox radio"></span>
                 <span class="description">
                   <div class="title">Fundacja “Bez domu”</div>
@@ -144,7 +144,7 @@
                     zamieszkania
                   </div>
                 </span>
-              </label>-->
+              </label>
             </div>
             
 
@@ -265,17 +265,16 @@
       <div class="contact">
         <h2>Skontaktuj się z nami</h2>
         <h3>Formularz kontaktowy</h3>
-        <form class="form--contact" method="post">
-          {% csrf_token %}
+        <form class="form--contact">
           <div class="form-group form-group--50">
-            <input type="text" name="name" placeholder="Imię" id="contact-first-name" />
+            <input type="text" name="name" placeholder="Imię" />
           </div>
           <div class="form-group form-group--50">
-            <input type="text" name="surname" placeholder="Nazwisko" id="contact-last-name"/>
+            <input type="text" name="surname" placeholder="Nazwisko" />
           </div>
 
           <div class="form-group">
-            <textarea id="contact-text"
+            <textarea
               name="message"
               placeholder="Wiadomość"
               rows="1"

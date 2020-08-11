@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from Project_1_App import views
+from django.conf.urls import url
 #views
 from Project_1_App import views as ex_views
 from Project_1_App.views import LandingPage, signup, activate
@@ -22,6 +24,8 @@ from django.contrib.auth import views as auth_views
 from Project_1_App.forms import EmailValidationOnForgotPassword
 
 urlpatterns = [
+    #AJAX REQUEST FORM
+    url(r'^ajax/validate_categories/$', views.validate_categories, name='validate_categories'),
     #api
     path(r'^api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
