@@ -73,7 +73,7 @@ class LandingPage(View):
             send_mail(
             'CONTACT',
             text,
-            email,
+            [email],
             ['kubaslawski.webdeveloper@gmail.com'],
             fail_silently=False,
             )
@@ -106,7 +106,7 @@ class AddDonation(View):
         if form1.is_valid():
             categories1 = form1.cleaned_data.get('categories')
         quantity1 = request.POST.get('bags')    
-        institutions1 = request.POST.getlist("organization")
+        institutions1 = request.POST.get("institution-key")
         #other data
         address1 = request.POST.get('address')
         city1 = request.POST.get('city')
@@ -116,6 +116,7 @@ class AddDonation(View):
         time1 = request.POST.get('time')
         com1 = request.POST.get('more_info')
         user1 = request.user.id 
+        email = request.user.email
         if categories1 and quantity1 and institutions1 and address1 and city1 and code1 and phone1 and user1:
             print('Truue')
             d = Donation()
@@ -131,9 +132,7 @@ class AddDonation(View):
             d.user_id = user1 
             d.save()
             d.categories.set(categories1)
-        else:
-            print('FASLE')
-            
+
         return render(request, "form.html", locals())
 
 

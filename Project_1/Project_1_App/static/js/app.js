@@ -304,7 +304,7 @@ document.addEventListener("DOMContentLoaded", function() {
                   //znaleźć element rodzica i usunąć children
 
                   '<label name="organization_label">' +
-                  '<input type="radio" name="organization" value="' + value + '" id="institution"/>' +
+                  '<input type="radio" name="organization" value="' + value + '" id="institution-key"/>' +
                   '<span class="checkbox radio"></span>' + 
                   '<span class="description">' + 
                     '<div class="title">'+ key + '</div>' +
