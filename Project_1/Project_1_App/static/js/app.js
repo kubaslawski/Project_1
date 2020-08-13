@@ -284,23 +284,44 @@ document.addEventListener("DOMContentLoaded", function() {
             "categories": catArrIdString
           }
         }).done(function(institutionsByName) {
-          console.log(institutionsByName)
+          //name, id instead of key, value
+          var len = 0 
           for (var [key, value] of Object.entries(institutionsByName)){
-            console.log(`${key}: ${value}`);
-            document.getElementById("institution-checkbox").innerHTML += 
-            '<label>' +
-            '<input type="radio" name="organization" value="inst" id="institution" />' +
-            '<span class="checkbox radio"></span>' + 
-            '<span class="description">' + 
-              '<div class="title">'+ `${key}`  +'</div>' +
-              '<div class="subtitle">' + 
-                'Cel i misja: Pomoc dla osób nie posiadających miejsca' + 
-                'zamieszkania' +
-              '</div>' +
-            '</span>' + 
-          '</label>'
-        
+            len = len + 1 
           }
+          //console.log(len)
+          var checkboxLength = document.getElementById("institution-checkbox").childElementCount
+          //console.log(checkboxLength)
+            for (var [key, value] of Object.entries(institutionsByName)){
+              //console.log(`${key}: ${value}`);
+                  document.getElementById("institution-checkbox").innerHTML += 
+                  //`<label>
+                  //   <input type="radio" name="organization" value="${value}" id="institution"/>
+                    // <span class="checkbox radio"></span>
+                    // ...
+                  //</label>
+                  //`
+                  //znaleźć element rodzica i usunąć children
+
+                  '<label name="organization_label">' +
+                  '<input type="radio" name="organization" value="' + value + '" id="institution"/>' +
+                  '<span class="checkbox radio"></span>' + 
+                  '<span class="description">' + 
+                    '<div class="title">'+ key + '</div>' +
+                    '<div class="subtitle">' + 
+                      'Cel i misja: Pomoc dla osób nie posiadających miejsca' + 
+                      'zamieszkania' +
+                    '</div>' +
+                  '</span>' + 
+                '</label>'
+          }
+          if(checkboxLength>len){
+            for(i=len; i=i; i<checkboxLength){
+              document.getElementById("institution-checkbox").children[i].remove()
+            }
+
+          }
+
         })
         .fail(function(e) {
           alert( "error" );

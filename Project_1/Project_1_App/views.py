@@ -36,13 +36,15 @@ class LandingPage(View):
         #total supported organizations count
         ti = Donation.objects.values('institution_id').annotate(total_i=Count('institution_id'))
         total_institutions = len(ti)
-        #foundations 
+        #foundations
+        #dobrze 
         foundations = Institution.objects.filter(type='1')
         paginator1 = Paginator(foundations, 3)
         page = request.GET.get('page')
         fdt = paginator1.get_page(page)
         # brak informacji na której zakładace znajduje się użytkownik
         #NGO
+        #źle
         ngos = Institution.objects.filter(type='2')
         ng = []
         for n in ngos:
@@ -51,7 +53,7 @@ class LandingPage(View):
         paginator2 = Paginator(ng, 5)
         page = request.GET.get('page')
         ngt = paginator2.get_page(page)
-        #lokal charities
+        #local charities
         lcs = Institution.objects.filter(type='3')
         lc = []
         for l in lcs:
@@ -64,8 +66,9 @@ class LandingPage(View):
     def post(self, request):
         first_name = request.POST.get('contact-first-name')
         last_name = request.POST.get('contact-last-name')
-        text = request.POST.get('contact-text')
+        text = request.POST.get('message')
         email = request.user.email
+        print(text, email)
         try:
             send_mail(
             'CONTACT',
@@ -103,24 +106,16 @@ class AddDonation(View):
         if form1.is_valid():
             categories1 = form1.cleaned_data.get('categories')
         quantity1 = request.POST.get('bags')    
-        institutions1 = request.POST.get('') 
+        institutions1 = request.POST.getlist("organization")
         #other data
         address1 = request.POST.get('address')
-        print(address1)
         city1 = request.POST.get('city')
-        print(city1)
         code1 = request.POST.get('postcode')
-        print(code1)
         phone1 = request.POST.get('phone')
-        print(phone1)
         data1 = request.POST.get('data')
-        print(data1)
         time1 = request.POST.get('time')
-        print(time1)
         com1 = request.POST.get('more_info')
-        print(com1)
         user1 = request.user.id 
-        print(user1)
         if categories1 and quantity1 and institutions1 and address1 and city1 and code1 and phone1 and user1:
             print('Truue')
             d = Donation()
