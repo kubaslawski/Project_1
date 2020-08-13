@@ -1,0 +1,105 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Szczegóły użytkownika</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+  </head>
+
+
+
+<section id="stats" class="stats">
+    <div class="container container--85">
+      <div class="stats--item">
+        <em>{{logged_user.first_name}} {{logged_user.last_name}}</em> 
+        <em>{{logged_user.email}}</em>
+        <h3>Oddanych worków:</h3>
+        <em>{{dq_total}}</em>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius est beatae, quod accusamus illum tempora!</p>
+      </div>
+
+      <div class="stats--item">
+        
+       
+        <h3>Wspartych organizacji: <br> 
+          {% if supp_fund != 0 %}
+          <em>{{supp_fund}}</em>
+          {% else %}
+          <em>0</em>
+          {% endif %}
+        </h3>
+        {% for bag in bag_per_fund %}
+          <p>{{bag.institution__name}} : {{bag.total}}</p>
+        {% endfor %}  
+      </div>
+
+      <div class="stats--item">
+        <h3>Przekazane dary do odbioru: 
+          <br> <br>
+          <h2>{{all_donations_not_taken_count}}</h2>
+        </h3>
+        <p name="taken_items">
+        {% for donate in all_donations_not_taken %}
+        <h4>Ilość worków: {{donate.quantity}}</h4>
+        <h4>Dla organizacji: {{donate.institution}}</h4>
+        <h4>Rodzaj darów: {% for c in donate.categories.all %} {{c}}, {% endfor %}</h4>
+        <h4>Termin odbioru: 
+          {% if donate.pick_up_time.exists %}
+          {{donate.pick_up_time}}
+          {% else %}
+          Nie podano
+          {% endif %}
+        </h4>
+        <h4>
+          <form action="" method="post">
+          {% csrf_token %}
+          {% if donate.is_taken == False %}
+             <br>
+              <button type="submit" class="btn" name="taken_or_not" value="{{donate.id}}" >Oznacz jako zabrane</button>
+          {% else %}
+              <button type="submit" class="btn" name="taken_or_not" value="{{donate.is_taken}}">Oznacz jako niezabrane</button>       
+          {% endif %}
+          </form>
+        <br>
+        {% endfor %}
+        </p>
+      </div>
+      <div class="stats--item">
+        <h3>Dary  <br> Które <br> Odebrano
+          <br> <br>
+          <h2>{{all_donations_taken_count}}</h2>
+        </h3>
+        <p name="taken_items">
+          {% for donate in all_donations_taken %}
+          <h4>Ilość worków: {{donate.quantity}}</h4>
+          <h4>Dla organizacji: {{donate.institution}}</h4>
+          <h4>Rodzaj darów: {% for c in donate.categories.all %} {{c}}, {% endfor %}</h4>
+          <h4>Termin odbioru: 
+            {% if donate.pick_up_time.exists %}
+            {{donate.pick_up_time}}
+            {% else %}
+            Nie podano
+            {% endif %}
+          </h4>
+          <h4>
+            <form action="" method="post">
+            {% csrf_token %}
+            {% if donate.is_taken == False %}
+               <br>
+                <button type="submit" class="btn" name="taken_or_not" value="{{donate.id}}" >Oznacz jako zabrane</button>
+            {% else %}
+                <button type="submit" class="btn" name="taken_or_not" value="{{donate.id}}">Oznacz jako niezabrane</button>       
+            {% endif %}
+            </form>
+          <br>
+          {% endfor %}
+          </p>
+      </div>
+
+    </div>
+  </section>
+</html>
