@@ -92,7 +92,7 @@
       </div>
 
       <div class="form--steps-container">
-        <div class="form--steps-counter">Krok <span>1</span>/5</div>
+        <div name="form-div" class="form--steps-counter">Krok <span>1</span>/5</div>
 
         <form action="{% url 'form-confirmation' %}" method="post">
           {% csrf_token %}
@@ -110,7 +110,7 @@
           </div>
 
           <!-- STEP 2 -->
-          <div data-step="2">
+          <div data-step="2" id="div2">
             <h3>Podaj liczbę 60l worków, w które spakowałeś/aś rzeczy:</h3>
 
             <div class="form-group form-group--inline">
@@ -129,7 +129,7 @@
 
 
           <!-- STEP 4 -->
-          <div data-step="3">
+          <div data-step="3" id="div3">
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
           
             
@@ -141,7 +141,7 @@
                   <div class="title">Fundacja “Bez domu”</div>
                   <div class="subtitle">
                     Cel i misja: Pomoc dla osób nie posiadających miejsca
-                    zamieszkania
+                    dsadsazamieszkania
                   </div>
                 </span>
               </label>-->
@@ -155,7 +155,7 @@
           </div>
 
           <!-- STEP 5 -->
-          <div data-step="4">
+          <div data-step="4" id="div4">
             <h3>Podaj adres oraz termin odbioru rzecz przez kuriera:</h3>
 
             <div class="form-section form-section--columns">
@@ -207,7 +207,7 @@
           </div>
 
           <!-- STEP 6 -->
-          <div data-step="5">
+          <div data-step="5" id="div5">
             <h3>Podsumowanie Twojej darowizny</h3>
 
             <div class="summary">

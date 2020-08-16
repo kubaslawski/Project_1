@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       var insArrName = []
       var insArrId = []
-      var InstitutionInputs = document.getElementsByName('institutions')
+      var InstitutionInputs = document.getElementsByName('organization')
       for (var i=0; i<InstitutionInputs.length; i++) {
         if (InstitutionInputs[i].checked) {
           var insId = InstitutionInputs[i].value;
@@ -254,8 +254,7 @@ document.addEventListener("DOMContentLoaded", function() {
           insArrName.push(insName)
         }
       }
-
-      document.getElementById("summary-institutions").innerHTML = insArrName.join(", ")
+      console.log(insArrName)
 
       var catArrName = []
       var catArrId = []
@@ -268,11 +267,10 @@ document.addEventListener("DOMContentLoaded", function() {
           catArrId.push(catId)
         }
       }
-      //console.log(catArrId)
+      //console.log(catArrName)
       
       var catArrIdInt = catArrId.map(v => parseInt(v, 10));
       //console.log(catArrIdInt)
-       
       
       var catArrIdString = JSON.stringify(catArrIdInt)
       if (catArrId.length > 0) {
@@ -284,44 +282,38 @@ document.addEventListener("DOMContentLoaded", function() {
             "categories": catArrIdString
           }
         }).done(function(institutionsByName) {
-          //name, id instead of key, value
           var len = 0 
           for (var [key, value] of Object.entries(institutionsByName)){
             len = len + 1 
           }
-          //console.log(len)
-          var checkboxLength = document.getElementById("institution-checkbox").childElementCount
-          //console.log(checkboxLength)
-            for (var [key, value] of Object.entries(institutionsByName)){
-              //console.log(`${key}: ${value}`);
-                  document.getElementById("institution-checkbox").innerHTML += 
-                  //`<label>
-                  //   <input type="radio" name="organization" value="${value}" id="institution"/>
-                    // <span class="checkbox radio"></span>
-                    // ...
-                  //</label>
-                  //`
-                  //znaleźć element rodzica i usunąć children
+          
+          var institutionDiv = document.getElementById("div3")
 
+          if (document.getElementById("div3").className == "active"){
+            console.log("ACTIVE")
+            //console.log(len)
+          var checkboxLength = document.getElementById("institution-checkbox").childElementCount
+
+            for (var [name, value] of Object.entries(institutionsByName)){
+                  document.getElementById("institution-checkbox").innerHTML +=
                   '<label name="organization_label">' +
                   '<input type="radio" name="organization" value="' + value + '" id="institution-key"/>' +
                   '<span class="checkbox radio"></span>' + 
                   '<span class="description">' + 
-                    '<div class="title">'+ key + '</div>' +
+                    '<div class="title">'+ name + '</div>' +
                     '<div class="subtitle">' + 
-                      'Cel i misja: Pomoc dla osób nie posiadających miejsca' + 
-                      'zamieszkania' +
                     '</div>' +
                   '</span>' + 
                 '</label>'
-          }
-          if(checkboxLength>len){
-            for(i=len; i=i; i<checkboxLength){
-              document.getElementById("institution-checkbox").children[i].remove()
-            }
+          }    
+          //if(checkboxLength>len){
+          //  for(i=len; i=i; i<checkboxLength){
+          //   document.getElementById("institution-checkbox").children[len].remove()
+          //  }
+
+          //}
 
           }
-
         })
         .fail(function(e) {
           alert( "error" );
@@ -347,6 +339,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       var bagQuantity = document.getElementById('bags').value;
       document.getElementById('summary-quantity').innerHTML = "Oddajesz " + bagQuantity + " worków" + catArrName.join(", ") 
+      document.getElementById('summary-institutions').innerHTML = insArrName.join(", ")
       //var type = document.getElementById('id_type').value;
 
       //document.getElementById("summary-institutions").innerHTML = type

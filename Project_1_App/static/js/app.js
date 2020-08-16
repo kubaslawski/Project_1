@@ -275,6 +275,10 @@ document.addEventListener("DOMContentLoaded", function() {
        
       
       var catArrIdString = JSON.stringify(catArrIdInt)
+      var kids = document.getElementById("institution-checkbox").children;
+      for (var i=0; i<kids.length; i=i){
+        kids[i].remove(); 
+      }
       if (catArrId.length > 0) {
         $.ajax({
           type: "GET",
@@ -289,31 +293,25 @@ document.addEventListener("DOMContentLoaded", function() {
           for (var [key, value] of Object.entries(institutionsByName)){
             len = len + 1 
           }
-          //console.log(len)
+          console.log(len)
           var checkboxLength = document.getElementById("institution-checkbox").childElementCount
           //console.log(checkboxLength)
-            for (var [key, value] of Object.entries(institutionsByName)){
-              //console.log(`${key}: ${value}`);
+          console.log(Object.length)
+            for (var [name, id] of Object.entries(institutionsByName)){
                   document.getElementById("institution-checkbox").innerHTML += 
-                  //`<label>
-                  //   <input type="radio" name="organization" value="${value}" id="institution"/>
-                    // <span class="checkbox radio"></span>
-                    // ...
-                  //</label>
-                  //`
-                  //znaleźć element rodzica i usunąć children
-
                   '<label name="organization_label">' +
-                  '<input type="radio" name="organization" value="' + value + '" id="institution-key"/>' +
+                  '<input type="radio" name="organization" value="' + id + '" id="institution-key"/>' +
                   '<span class="checkbox radio"></span>' + 
                   '<span class="description">' + 
-                    '<div class="title">'+ key + '</div>' +
+                    '<div class="title">'+ name + '</div>' +
                     '<div class="subtitle">' + 
-                      'Cel i misja: Pomoc dla osób nie posiadających miejsca' + 
-                      'zamieszkania' +
                     '</div>' +
                   '</span>' + 
                 '</label>'
+          }
+          var kids = document.getElementById("institution-checkbox").children;
+          for (var i=0; i<kids.length; i=i){
+            kids[i].remove();
           }
           if(checkboxLength>len){
             for(i=len; i=i; i<checkboxLength){

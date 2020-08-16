@@ -106,7 +106,7 @@ class AddDonation(View):
         if form1.is_valid():
             categories1 = form1.cleaned_data.get('categories')
         quantity1 = request.POST.get('bags')    
-        institutions1 = request.POST.get("institution-key")
+        institutions1 = request.POST.get("organization")
         #other data
         address1 = request.POST.get('address')
         city1 = request.POST.get('city')
