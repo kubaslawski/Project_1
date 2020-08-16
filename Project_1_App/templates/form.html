@@ -94,7 +94,7 @@
       <div class="form--steps-container">
         <div name="form-div" class="form--steps-counter">Krok <span>1</span>/5</div>
 
-        <form action="{% url 'form-confirmation' %}" method="post">
+        <form action="{% url 'add_donation' %}" method="post">
           {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
@@ -226,6 +226,7 @@
                     <span class="summary--text" id ="summary-institutions"
                       ></span
                     >
+                    <input type="number" name="insId" id="insId" hidden/>
                   </li>
                 </ul>
               </div>

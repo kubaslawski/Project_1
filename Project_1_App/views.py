@@ -106,7 +106,7 @@ class AddDonation(View):
         if form1.is_valid():
             categories1 = form1.cleaned_data.get('categories')
         quantity1 = request.POST.get('bags')    
-        institutions1 = request.POST.get("organization")
+        institutions1 = request.POST.get('insId')
         #other data
         address1 = request.POST.get('address')
         city1 = request.POST.get('city')
@@ -117,7 +117,9 @@ class AddDonation(View):
         com1 = request.POST.get('more_info')
         user1 = request.user.id 
         email = request.user.email
-        if categories1 and quantity1 and institutions1 and address1 and city1 and code1 and phone1 and user1:
+        print('!!!!!!!!!!!!!!!!!!!!!!')
+        print(quantity1, institutions1, address1, city1, code1, phone1, data1, time1, com1, user1, email)
+        if categories1 and institutions1 and quantity1 and address1 and city1 and code1 and phone1 and user1:
             print('Truue')
             d = Donation()
             d.quantity = quantity1
