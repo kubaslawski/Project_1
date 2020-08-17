@@ -22,6 +22,8 @@ class Institution(models.Model):
     description = models.CharField(max_length=256)
     type = models.CharField(choices=type_of_organization, default=1, max_length=32)
     categories = models.ManyToManyField(Category)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+
 
     def __str__(self):
         return self.name

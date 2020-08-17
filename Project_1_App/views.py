@@ -31,8 +31,9 @@ from django.core.mail import BadHeaderError
 class LandingPage(View):
     def get(self, request):
         #total quantity count
-        tq = Donation.objects.aggregate(total_q=Sum('quantity'))
-        total_quantity = tq['total_q']
+        tq = Donation.objects.filter(user=request.user.id)
+        tq_u = tq.aggregate(total_q=Sum('quantity'))
+        total_quantity = tq_u['total_q']
         #total supported organizations count
         ti = Donation.objects.values('institution_id').annotate(total_i=Count('institution_id'))
         total_institutions = len(ti)
@@ -94,7 +95,7 @@ def validate_categories(request):
     return JsonResponse({institution.name: institution.id for institution in qs})
 
 
-
+#TO DO
 class AddDonation(View):
     def get(self, request):
         form1 = CategoryDonationForm()
@@ -117,10 +118,8 @@ class AddDonation(View):
         com1 = request.POST.get('more_info')
         user1 = request.user.id 
         email = request.user.email
-        print('!!!!!!!!!!!!!!!!!!!!!!')
-        print(quantity1, institutions1, address1, city1, code1, phone1, data1, time1, com1, user1, email)
         if categories1 and institutions1 and quantity1 and address1 and city1 and code1 and phone1 and user1:
-            print('Truue')
+            #Insert a message if donate is lacking some needed informations
             d = Donation()
             d.quantity = quantity1
             d.institution_id = institutions1
@@ -269,7 +268,6 @@ class UserProfileView(View):
         #num of supported org.
         supp_fund = len(Donation.objects.filter(user_id=request.user.id).values('institution_id').annotate(total=Count('institution_id')))
         bag_per_fund = Donation.objects.filter(user_id=request.user.id).values('institution__name').annotate(total=Sum('quantity'))
-        print(bag_per_fund)
         return render(request, "profile.html", locals())
     
     def post(self, request):
@@ -322,6 +320,8 @@ class UserSettingsView(View):
             messages.error(request, 'Please correct the error below.')
         return render(request, "settings.html", {'form2': form2})
         
-
+class MyFoundationsView(View):
+    def get(self, request):
+        return render(request, "my_foundations.html")
 
 
