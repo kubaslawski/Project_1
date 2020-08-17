@@ -134,7 +134,7 @@ class AddDonation(View):
             d.user_id = user1 
             d.save()
             d.categories.set(categories1)
-
+            return redirect('base')
         return render(request, "form.html", locals())
 
 
