@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from .models import Institution, Donation
+from .models import Institution, Donation, Message
 from django.db.models import Sum, Count
 import random
 from .forms import SignUpForm, UserLoginForm, CategoryDonationForm, \
@@ -80,6 +80,7 @@ class LandingPage(View):
 def validate_categories(request):
     obj = request.GET.get('categories', '')
     print(obj)
+    import json
     obj: list[int] = json.loads(obj)
     qs = Institution.objects.filter(categories__in=obj)
     return JsonResponse({institution.name: institution.id for institution in qs})
@@ -375,4 +376,16 @@ def taken_or_not_taken(request):
 
 class MessageInboxView(View):
     def get(self, request):
-        return render(request, "messages/inbox.html")
+        messages = Message.objects.filter(send_to=request.user.id).filter(type=2)
+        unread_messages = Message.objects.filter(is_read=False).count()
+        ctx = {
+            "messages": messages,
+            "unread_messages": unread_messages,
+        }
+        return render(request, "messages/inbox.html", ctx)
+
+
+class MessageView(View):
+    def get(self, request, message_id):
+        message = Message.objects.get(id=message_id)
+        return render(request, "messages/message.html", {"message": message})

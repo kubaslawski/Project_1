@@ -297,31 +297,20 @@ body{
 						<div class="padding"></div>
 						
 						<div class="table-responsive">
-							<table class="table">
-                                {% for m in messages %}
 								<tbody>
                                 <tr>
+                                    <br>
+                                    <td><h2>{{message.subject}}</h2></td>
+                                    <p style="border-style: groove; height: 325px;">{{message.context}}</p>
+                                    <!--
 									<td class="action"><input type="checkbox" /></td>
 									<td class="action"><i class="fa fa-star-o"></i></td>
 									<td class="action"><i class="fa fa-bookmark-o"></i></td>
-									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
-									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
-									<td class="time">{{m.timestamp}}</td>
+                                    -->
+                                    <h5><a hrer="">Answer</a>     <a hrer="">Add to favorites</a>     <a hrer="">Delete</a></h5>
 								</tr>
                                 </tbody>
-                                {% endfor %}
-                            </table>
-						</div>
-
-						<ul class="pagination">
-							<li class="disabled"><a href="#">«</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">»</a></li>
-						</ul>						
+						</div>		
 					</div>
 					<!-- END INBOX CONTENT -->
 					

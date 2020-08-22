@@ -67,4 +67,5 @@ urlpatterns = [
          name="password_reset_complete"),
     #messages
     path('my_inbox/', ex_views.MessageInboxView.as_view(), name="my_inbox"),
+    path('message/<int:message_id>/', ex_views.MessageView.as_view(), name="message"),
  ]

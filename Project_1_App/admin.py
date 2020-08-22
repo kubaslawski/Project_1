@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Institution, Donation, Category
+from .models import Institution, Donation, Category, Message
 # Register your models here.
 
 class InstitutionAdmin(admin.ModelAdmin):
@@ -27,3 +27,11 @@ class DonationAdmin(admin.ModelAdmin):
         model = Donation 
 
 admin.site.register(Donation, DonationAdmin)
+
+class MessageAdmin(admin.ModelAdmin):
+    model = Message 
+
+    class Meta:
+        model = Message 
+
+admin.site.register(Message, MessageAdmin)
