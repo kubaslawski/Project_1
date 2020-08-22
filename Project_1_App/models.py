@@ -52,3 +52,4 @@ from django.core.exceptions import PermissionDenied
 def delete_user(sender, instance, **kwargs):
     if instance.is_superuser:
         raise PermissionDenied
+

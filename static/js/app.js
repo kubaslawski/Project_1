@@ -400,24 +400,20 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
 
-
-}
-
-
-
+  function getCookie(c_name)
+  {
+      if (document.cookie.length > 0)
+      {
+          c_start = document.cookie.indexOf(c_name + "=");
+          if (c_start != -1)
+          {
+              c_start = c_start + c_name.length + 1;
+              c_end = document.cookie.indexOf(";", c_start);
+              if (c_end == -1) c_end = document.cookie.length;
+              return unescape(document.cookie.substring(c_start,c_end));
+          }
+      }
+      return "";
+  }
 });

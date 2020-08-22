@@ -7,7 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/pagination.js' %}"></script>
   </head>
   <body>
     <header class="header--main-page">
@@ -65,7 +67,7 @@
         </div>
       </div>
 
-      <a href="#" class="btn btn--large">Załóż konto</a>
+      <a href="{% url 'register' %}" class="btn btn--large">Załóż konto</a>
     </section>
 
     <section id="about-us" class="about-us">
@@ -79,101 +81,126 @@
 
      <section id="help" class="help">
       <h2>Komu pomagamy?</h2>
+      <h3>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</h3>
 
       <ul class="help--buttons">
-        <li data-id="1"><a href="{% url 'base' %}#help"  class="btn btn--without-border active">Fundacjom</a></li>
-        <li data-id="2"><a href="{% url 'base' %}#help"  class="btn btn--without-border ">Organizacjom pozarządowym</a></li>
-        <li data-id="3"><a href="{% url 'base' %}#help"  class="btn btn--without-border ">Lokalnym zbiórkom</a></li>
+        <li data-id="1"><a href="{% url 'base' %}#help"  class="btn btn--without-border " onclick="SwitchInstitution()" id="pag_li_1">Fundacjom</a></li>
+        <li data-id="2"><a href="{% url 'base' %}#help"  class="btn btn--without-border " onclick="SwitchInstitution()" id="pag_li_2">Organizacjom pozarządowym</a></li>
+        <li data-id="3"><a href="{% url 'base' %}#help"  class="btn btn--without-border " onclick="SwitchInstitution()" id="pag_li_3">Lokalnym zbiórkom</a></li>
       </ul>
 
       <!-- SLIDE 1 -->
-      <div class="btn help--slides active" data-id="1">
-        <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
-      
+      <div class="btn help--slides active" data-id="1" id="pagination_div_1">
         <ul class="help--slides-items">
-          {% for f in fdt %}
+          {% for t in page_obj_1 %}
           <li>
             <div class="col">
-              <div class="title">{{f.name}}</div>
-              <div class="subtitle">Cel i misja: {{f.description}}</div>
+              <div class="title">{{t.name}}</div>
+              <div class="subtitle">Cel i misja: {{t.description}}</div>
             </div>
 
-            <div class="col"><div class="text">{% for c in f.categories.all %} {{c}}, {% endfor %}</div></div>
+            <div class="col"><div class="text">{% for c in t.categories.all %} {{c}}, {% endfor %}</div></div>
           </li>
           {% endfor %}
           <div class="pagination">
             <span class="step-links">
-                {% if fdt.has_previous %}
+                {% if page_obj_1.has_previous %}
                     <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{ fdt.previous_page_number }}">previous</a>
+                    <a href="?page={{ page_obj_1.previous_page_number }}">previous</a>
                 {% endif %}
         
                 <span class="current">
-                    Page {{ fdt.number }} of {{ fdt.paginator.num_pages }}.
+                    Page {{ page_obj_1.number }} of {{ page_obj_1.paginator.num_pages }}.
                 </span>
         
-                {% if fdt.has_next %}
-                    <a href="?page={{ fdt.next_page_number }}">next</a>
-                    <a href="?page={{ fdt.paginator.num_pages }}">last &raquo;</a>
+                {% if page_obj_1.has_next %}
+                    <a href="?page={{ page_obj_1.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj_1.paginator.num_pages }}">last &raquo;</a>
                 {% endif %}
             </span>
         </div>
         </ul>
-        <!-- Pagination
+        <!--
         <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
+          <li><a href="#help" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
+          <li><a href="#help" class="btn btn--small btn--without-border" data-page="2">2</a></li>
+          <li><a href="#help" class="btn btn--small btn--without-border" data-page="3">3</a></li>
         </ul>
-        -->
+      -->
       </div>
       </section>
 
 
       <!-- SLIDE 2 -->
-      <div class="btn help--slides" data-id="2">
-        <p>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Hic officiis mollitia dolor, neque aspernatur accusamus debitis. Ducimus, officia. Quia, sunt illum! Non iste placeat ab ipsum alias
-          quos suscipit corporis!
-        </p>
+      <div class="btn help--slides" data-id="2" id="pagination_div_2">
         <ul class="help--slides-items">
-          {% for n in ngt %}
+          {% for t in page_obj_2 %}
           <li>
             <div class="col">
-              <div class="title">{{n.name}}</div>
-              <div class="subtitle">Cel i misja: {{n.description}}</div>
+              <div class="title">{{t.name}}</div>
+              <div class="subtitle">Cel i misja: {{t.description}}</div>
             </div>
 
-            <div class="col"><div class="text">{% for c in n.categories.all %} {{c}} {% endfor %}</div></div>
+            <div class="col"><div class="text">{% for c in t.categories.all %} {{c}}, {% endfor %}</div></div>
           </li>
           {% endfor %}
+          <div class="pagination">
+            <span class="step-links">
+                {% if page_obj_2.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj_2.previous_page_number }}">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ page_obj_2.number }} of {{ page_obj_2.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj_2.has_next %}
+                    <a href="?page={{ page_obj_2.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj_2.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
         </ul>
-
-        <!-- Pagination
+        <!--
         <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="4">4</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="5">5</a></li>
+          <li><a href="#help" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
+          <li><a href="#help" class="btn btn--small btn--without-border" data-page="2">2</a></li>
+          <li><a href="#help" class="btn btn--small btn--without-border" data-page="3">3</a></li>
         </ul>
-        -->
+      -->
       </div>
 
       <!-- SLIDE 3 -->
-      <div class="btn help--slides" data-id="3">
-        <p>Lorem ipsum dolor sit amet, his ocurreret persequeris ea, ad utinam laudem duo. Verterem adipisci partiendo eos ne, ea his reque quaeque recteque, ne quo lobortis intellegam.</p>
+      <div class="btn help--slides" data-id="3" id="pagination_div_3">
         <ul class="help--slides-items">
-          {% for n in ng %}
+          {% for t in page_obj_3 %}
           <li>
             <div class="col">
-              <div class="title">{{n.name}}</div>
-              <div class="subtitle">Cel i misja: {{n.description}}</div>
+              <div class="title">{{t.name}}</div>
+              <div class="subtitle">Cel i misja: {{t.description}}</div>
             </div>
 
-            <div class="col"><div class="text">{% for c in n.categories.all %} {{c}} {% endfor %}</div></div>
+            <div class="col"><div class="text">{% for c in t.categories.all %} {{c}} {% endfor %}</div></div>
           </li>
           {% endfor %}
+          <div class="pagination">
+            <span class="step-links">
+                {% if page_obj_2.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj_3.previous_page_number }}">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ page_obj_3.number }} of {{ page_obj_3.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj_2.has_next %}
+                    <a href="?page={{ page_obj_3.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj_3.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
         </ul>
 
         <!-- Pagination

@@ -12,7 +12,35 @@
 
   <body>
     <header class="header--main-page">
-      {% include "my_foundations_navbar.html" %}  
+      <nav class="container container--70">
+        <ul class="nav--actions">
+          {% if user.is_authenticated %}
+          <ul class="nav--actions">
+            <li class="logged-user">
+              Witaj {{user.get_username}}
+              <ul class="dropdown">
+                <li><a href="{% url 'user_profile' %}">Profil</a></li>
+                <li><a href="{% url 'settings' %}">Ustawienia użytkownika</a></li>
+                <li><a href="/admin">Panel Administracyjny</a></li>
+                <li><a href="{% url 'logout' %}">Wyloguj</a></li>
+              </ul>
+            </li>
+          </ul>
+          {% else %}
+          <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a></li>
+          <li><a href="{% url 'reset_password' %}" class="btn btn--small btn--without-border">Zapomniałem hasła</a></li>
+          <li><a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+          {% endif %}
+        </ul>
+    
+        <ul>
+          <li><a href="{% url 'base' %}" class="btn btn--without-border ">Start</a></li>
+          <li><a href="{% url 'my_foundation' %}" class="btn btn--without-border ">Moja Fundacja</a></li>  
+          <li><a href="{% url 'donations_details' ins.id %}"  class="btn btn--without-border ">Przegląd darów</a></li>  
+          <li><a href="" class="btn btn--without-border">Top darczyńcy</a></li>
+        </ul>
+        
+      </nav>
       <div class="slogan container container--90">
         <div class="slogan--item">
           <h1>
@@ -44,12 +72,13 @@
             <span class="icon icon--glasses"></span>
             <h3>Ilość odebranych darów:</h3>
             <p>{{dr}}</p>
+            <a href="{% url 'donations_details' ins.id %}" class="btn btn">Zobacz szczegóły</a>
           </div>
           <div class="steps--item">
             <span class="icon icon--courier"></span>
             <h3>Ilość darów do odebrania:</h3>
             <p>{{dur}}</p>
-            <button class="btn" >Zobacz szczegóły</button>
+            <a href="{% url 'donations_details' ins.id %}" class="btn btn">Zobacz szczegóły</a>
           </div>
         </div>
 

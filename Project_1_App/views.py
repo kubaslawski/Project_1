@@ -39,6 +39,25 @@ class LandingPage(View):
             "total_institutions": total_institutions,
         }
         #Pagination to be done
+        type_1 = Institution.objects.filter(type=1)
+        p_1 = Paginator(type_1, 3)
+        page_number = request.GET.get('page')
+        page_obj_1 = p_1.get_page(page_number)
+
+        type_2 = Institution.objects.filter(type=2)
+        p_2 = Paginator(type_2, 3)
+        page_obj_2 = p_2.get_page(page_number)
+
+        type_3 = Institution.objects.filter(type=3)
+        p_3 = Paginator(type_3, 3)
+        page_obj_3 = p_3.get_page(page_number)
+        ctx = {
+            "total_quantity": total_quantity,
+            "total_institutions": total_institutions,
+            "page_obj_1": page_obj_1,
+            "page_obj_2": page_obj_2,
+            "page_obj_3": page_obj_3,
+        }
         return render(request, "index.html", ctx)
 
     def post(self, request):
@@ -298,7 +317,7 @@ class UserSettingsView(View):
                         u.save()
                     return HttpResponse('Ustawienia zapisane')
                 else:
-                    form.add_error(None, "Niepoprawne dane")
+                    form1.add_error(None, "Niepoprawne dane")
             else:
                 return HttpResponse('Niepoprawne hasło')
         form2 = PasswordChangeForm(request.user, request.POST)
@@ -344,14 +363,6 @@ class DonationOfFoundation(View):
         taken = donations.filter(is_taken=True)
         not_taken = donations.filter(is_taken=False)
         return render(request, "donations_details.html", locals())
-
-class DonationNavbar(View):
-    def get(self, request):
-        institution = Institution.objects.filter(owner=request.user.id)
-        ins = institutions[0]
-        my_institution = Institution.objects.filter(id=ins)
-        print(my_institution)
-        return render(request, "my_foundations_navbar.html", {{"id": my_institution}})
 
 
 def taken_or_not_taken(request):
