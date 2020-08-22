@@ -38,16 +38,13 @@ class LandingPage(View):
             "total_quantity": total_quantity,
             "total_institutions": total_institutions,
         }
-        #Pagination to be done
         type_1 = Institution.objects.filter(type=1)
         p_1 = Paginator(type_1, 3)
         page_number = request.GET.get('page')
         page_obj_1 = p_1.get_page(page_number)
-
         type_2 = Institution.objects.filter(type=2)
         p_2 = Paginator(type_2, 3)
         page_obj_2 = p_2.get_page(page_number)
-
         type_3 = Institution.objects.filter(type=3)
         p_3 = Paginator(type_3, 3)
         page_obj_3 = p_3.get_page(page_number)
@@ -61,21 +58,19 @@ class LandingPage(View):
         return render(request, "index.html", ctx)
 
     def post(self, request):
-        first_name = request.POST.get('contact-first-name')
-        last_name = request.POST.get('contact-last-name')
+        first_name = request.POST.get('name')
+        last_name = request.POST.get('surname')
         text = request.POST.get('message')
-        email = request.user.email
-        print(text, email)
-        try:
-            send_mail(
-        'CONTACT',
-        first_name + last_name + text,
-        [email],
-        ['kubaslawski.webdeveloper@gmail.com'],
-        fail_silently=False,
-            )
-        except BadHeaderError:
-            return HttpResponse('Invalid header found.')
+        email_from = str(request.user.email)
+        email_to = 'kubaslawski.webdeveloper@gmail.com'
+        print(type(email_from))
+        send_mail(
+            'CONTACT  ' + str(first_name) + '  ' +str(last_name),
+            text,
+            'kubaslawski@gmail.com',
+            [email_to],
+            fail_silently=False,
+        )
         return render(request, "base.html")
 
 #Wczytać instytucje

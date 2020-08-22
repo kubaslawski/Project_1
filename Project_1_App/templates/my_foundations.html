@@ -72,16 +72,22 @@
             <span class="icon icon--glasses"></span>
             <h3>Ilość odebranych darów:</h3>
             <p>{{dr}}</p>
-            <a href="{% url 'donations_details' ins.id %}" class="btn btn">Zobacz szczegóły</a>
+            <a href="{% url 'donations_details' ins.id %}#steps" class="btn btn">Zobacz szczegóły</a>
           </div>
           <div class="steps--item">
             <span class="icon icon--courier"></span>
             <h3>Ilość darów do odebrania:</h3>
             <p>{{dur}}</p>
-            <a href="{% url 'donations_details' ins.id %}" class="btn btn">Zobacz szczegóły</a>
+            <a href="{% url 'donations_details' ins.id %}#steps" class="btn btn">Zobacz szczegóły</a>
           </div>
         </div>
 
+      </section>
+      <section id="steps" class="steps">
+        <h2>Top donators</h2>>
+        <div class="steps--container">
+          ABC
+        </div>
       </section>
   </body>
 </html>
