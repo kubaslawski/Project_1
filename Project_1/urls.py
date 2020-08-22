@@ -26,6 +26,7 @@ from Project_1_App.forms import EmailValidationOnForgotPassword
 urlpatterns = [
     #AJAX REQUEST FORM
     url(r'^ajax/validate_categories/$', views.validate_categories, name='validate_categories'),
+    url(r'^ajax/taken_or_not_taken/$', views.taken_or_not_taken, name='taken_or_not_taken'),
     #api
     path(r'^api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
@@ -35,6 +36,9 @@ urlpatterns = [
     path('add_fundation/', ex_views.AddFundation.as_view(), name="add_fundation"),
     path('form_confirmation/', ex_views.DonationFormConfirmationView.as_view(), name="form-confirmation"),
     path('donate/<int:donate_id>', ex_views.DonateView.as_view(), name="donate"),
+    #my foundation
+    path('my_foundation', ex_views.MyFoundationsView.as_view(), name="my_foundation"),
+    path('DonationOfFoundation/<int:institution_id>/', ex_views.DonationOfFoundation.as_view(), name="donations_details"),
     #login/logut
     path('login/', ex_views.UserLoginView.as_view(), name="login"),
     path('logout/', ex_views.UserLogoutView.as_view(), name="logout"),

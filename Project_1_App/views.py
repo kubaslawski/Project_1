@@ -88,10 +88,10 @@ class LandingPage(View):
 
 def validate_categories(request):
     obj = request.GET.get('categories', '')
+    print(obj)
     import json
     obj: list[int] = json.loads(obj)
     qs = Institution.objects.filter(categories__in=obj)
-
     return JsonResponse({institution.name: institution.id for institution in qs})
 
 
@@ -322,6 +322,61 @@ class UserSettingsView(View):
         
 class MyFoundationsView(View):
     def get(self, request):
-        return render(request, "my_foundations.html")
+        #institution of user 
+        institutions = Institution.objects.filter(owner=request.user.id)
+        ins = institutions[0]
+        donations = Donation.objects.filter(institution=ins.id)
+        #list of donating users 
+        users_who_donated = []
+        for d in donations:
+            users_who_donated.append(d.user)
+        def remove_duplicates(x):
+            return list(dict.fromkeys(x))
+        users_who_donated = remove_duplicates(users_who_donated)
+        #total quantity of donated bags 
+        donation_quantity = Donation.objects.filter(institution_id=ins)
+        dq = donation_quantity.aggregate(total=Sum('quantity'))
+        dq_total = dq['total']
+        #num of received donations 
+        donation_received = Donation.objects.filter(is_taken=True).filter(institution_id=ins)
+        dr = len(donation_received)
+        #num of donations to be receive
+        donation_unreceived = Donation.objects.filter(is_taken=False).filter(institution_id=ins)
+        dur = len(donation_unreceived)
+        print(ins.id)
 
 
+        return render(request, "my_foundations.html", locals())
+
+class DonationOfFoundation(View):
+    def get(self, request, institution_id):
+        donations = Donation.objects.filter(institution_id=institution_id).order_by('pick_up_time')
+        taken = donations.filter(is_taken=True)
+        not_taken = donations.filter(is_taken=False)
+        return render(request, "donations_details.html", locals())
+
+class DonationNavbar(View):
+    def get(self, request):
+        institution = Institution.objects.filter(owner=request.user.id)
+        ins = institutions[0]
+        my_institution = Institution.objects.filter(id=ins)
+        print(my_institution)
+        return render(request, "my_foundations_navbar.html", {{"id": my_institution}})
+
+def taken_or_not_taken(request):
+    obj = request.POST['donation_number']
+    data = {
+        "id": obj
+    }
+    print(obj)
+    donate = Donation.objects.get(id=obj)
+    if donate.is_taken == True: 
+        donate.is_taken = False
+        donate.save()
+        print('Zmienione na False')
+    elif donate.is_taken == False:
+        donate.is_taken = True
+        donate.save()
+        print('Zmieniono na True')
+    return JsonResponse(data)
+    

@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Szczegóły użytkownika</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+  </head>
+
+  <body>
+    <header class="header--main-page">
+      {% include "my_foundations_navbar.html" %}  
+      <div class="slogan container container--90">
+        <div class="slogan--item">
+          <h1>
+            Zacznij pomagać!<br />
+            Oddaj niechciane rzeczy w zaufane ręce
+          </h1>
+        </div>
+      </div>
+    </header>
+    <section id="steps" class="steps">
+        <h2>{{ins.name}}</h2>
+  
+        <div class="steps--container">
+          <div class="steps--item">
+            <span class="icon icon--hands"></span>
+            <h3>Użytkownicy którzy ją wsparli</h3>
+            <p>
+            {% for user in users_who_donated %}
+            {{user.first_name}} {{user.last_name}}<br>
+            {% endfor %}
+            <p>
+          </div>
+          <div class="steps--item">
+            <span class="icon icon--arrow"></span>
+            <h3>Ilość przekazanych worków:</h3>
+            <p>{{dq_total}}</p>
+          </div>
+          <div class="steps--item">
+            <span class="icon icon--glasses"></span>
+            <h3>Ilość odebranych darów:</h3>
+            <p>{{dr}}</p>
+          </div>
+          <div class="steps--item">
+            <span class="icon icon--courier"></span>
+            <h3>Ilość darów do odebrania:</h3>
+            <p>{{dur}}</p>
+            <button class="btn" >Zobacz szczegóły</button>
+          </div>
+        </div>
+
+      </section>
+  </body>
+</html>

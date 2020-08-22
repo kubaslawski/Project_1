@@ -347,10 +347,7 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById('summary-quantity').innerHTML = "Oddajesz " + bagQuantity + " worków" + catArrName.join(", ") 
       document.getElementById('summary-institutions').innerHTML = insArrName.join(", ")
       var institutionIdInput = insArrId[0]
-      console.log(institutionIdInput)
       document.getElementById('insId').value = institutionIdInput
-      console.log(document.getElementById('insId').value)
-      console.log(insArrId.join(", "))
       //var type = document.getElementById('id_type').value;
 
       //document.getElementById("summary-institutions").innerHTML = type

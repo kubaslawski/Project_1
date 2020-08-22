@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Szczegóły użytkownika</title>
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="{% static 'js/my_donation.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+  </head>
+  <style>
+    .btn {
+      width: 30%;
+      height: 10%;
+    }
+  </style>
+
+
+
+  <body>
+    <header class="header--main-page">
+    {% include 'my_foundations_navbar.html' %}
+    <div class="slogan container container--90">
+      <div class="slogan--item">
+        <h1>
+          Lista donacji<br />
+          dla Twojej fundacji
+        </h1>
+      </div>
+    </div>
+    </header>
+    <section id="steps" class="steps">
+      {% csrf_token %}
+        <div style="width: 50%; float:left" class="steps--container">
+            <div class="Div_Taken" id="Div_Taken_Id" style="width: 80%; float: left; position: relative;">
+              {% for d in taken %}
+              <span id="p_{{d.id}}" class="taken">
+              <h4 id="h4_{{d.id}}">{{d.quantity}} bags of {% for c in d.categories.all %} {{c}} {% endfor %} by {{d.user.first_name}} {{d.user.last_name}} </h4>
+              <input id="donation_id" value="{{d.id}}" hidden>
+              <input type="button" onclick="updateStatus()" value="Mark as not taken" id="{{d.id}}" Mark as not taken>
+              </span>
+              {% endfor %}
+            </div>
+            <br>
+        </div>
+        <div style="width: 50%; float:right" class="steps--container">
+          <div class="Div_Not_Taken" id="Div_Not_Taken_Id" style="width: 80%; float: left; position: relative;">
+            {% for d in not_taken %}
+            <span id="p_{{d.id}}" class="not_taken">
+            <h4>{{d.quantity}} bags of {% for c in d.categories.all %} {{c}} {% endfor %} by {{d.user.first_name}} {{d.user.last_name}}</h4>
+            <input id="donation_id" value="{{d.id}}" hidden>
+            <input type="button" onclick="updateStatus()" value="Mark as taken" id="{{d.id}}">
+            </span>
+            <br>
+            {% endfor %}
+          </div>
+          <br>
+        </div>
+
+      </section>
+  </body>
+</html>
