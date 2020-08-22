@@ -58,6 +58,7 @@ class Message(models.Model):
     send_to = models.ForeignKey(User,on_delete=models.CASCADE, related_name="send_to")
     subject = models.CharField(choices=type_of_message)
     context = models.TextField()
+    is_read = models.BooleanField(default=False)
     timestamp = models.DataTimeField(auto_now_add=True)
 
 @receiver(pre_delete, sender=User)
