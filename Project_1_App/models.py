@@ -1,7 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.db.models.signals import pre_delete
+from django.dispatch.dispatcher import receiver
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 # Create your models here.
+
 
 class Category(models.Model):
     name = models.CharField(max_length=256)
@@ -43,10 +48,16 @@ class Donation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     is_taken = models.BooleanField(default=False)
 
-from django.db.models.signals import pre_delete
-from django.dispatch.dispatcher import receiver
-from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied
+type_of_message = (
+    ('1', "Notification"),
+    ('2', "Private Message"),
+)
+
+class Message(models.Model):
+    send_from = models.ForeignKey(User,on_delete=models.CASCADE, related_name="send_from")
+    send_to = models.ForeignKey(User,on_delete=models.CASCADE, related_name="send_to")
+    subject = models.CharField(choices=type_of_message)
+    context = models.TextField()
 
 @receiver(pre_delete, sender=User)
 def delete_user(sender, instance, **kwargs):

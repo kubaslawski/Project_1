@@ -347,9 +347,7 @@ class MyFoundationsView(View):
         #num of donations to be receive
         donation_unreceived = Donation.objects.filter(is_taken=False).filter(institution_id=ins)
         dur = len(donation_unreceived)
-        print(ins.id)
-
-
+        donators = Donation.objects.filter(institution=ins.id)
         return render(request, "my_foundations.html", locals())
 
 class DonationOfFoundation(View):
@@ -374,4 +372,8 @@ def taken_or_not_taken(request):
         donate.is_taken = True
         donate.save()
     return JsonResponse(data)
-    
+
+#CHAT App
+class ChatHomepage(View):
+    def get(self, request):
+        return render(request, 'chat/chat_homepage.html')

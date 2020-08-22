@@ -22,7 +22,6 @@ from Project_1_App import views as ex_views
 from Project_1_App.views import LandingPage, signup, activate
 from django.contrib.auth import views as auth_views
 from Project_1_App.forms import EmailValidationOnForgotPassword
-
 urlpatterns = [
     #AJAX REQUEST FORM
     url(r'^ajax/validate_categories/$', views.validate_categories, name='validate_categories'),
