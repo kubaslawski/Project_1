@@ -1,21 +1,18 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.views import View
 from django.core.paginator import Paginator
-from django.urls import reverse, reverse_lazy 
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-# Create your views here.
-from .models import Category, Institution, Donation
+from .models import Institution, Donation
 from django.db.models import Sum, Count
-import random 
-#forms
-from .forms import SignUpForm, UserLoginForm, CategoryDonationForm, ProfileSettingsForm, InstitutionDonationForm
-from .forms import AddFundationForm, AddFundationForm, AddInstitutionForm
-#django contrib
+import random
+from .forms import SignUpForm, UserLoginForm, CategoryDonationForm, \
+     ProfileSettingsForm, InstitutionDonationForm
+from .forms import AddFundationForm, AddInstitutionForm
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-#Mail confirmation, signup & login
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
@@ -31,39 +28,19 @@ from django.core.mail import BadHeaderError
 class LandingPage(View):
     def get(self, request):
         #total quantity count
-        tq = Donation.objects.filter(user=request.user.id)
-        tq_u = tq.aggregate(total_q=Sum('quantity'))
+        t_q = Donation.objects.filter(user=request.user.id)
+        tq_u = t_q.aggregate(total_q=Sum('quantity'))
         total_quantity = tq_u['total_q']
         #total supported organizations count
-        ti = Donation.objects.values('institution_id').annotate(total_i=Count('institution_id'))
-        total_institutions = len(ti)
-        #foundations
-        #dobrze 
-        foundations = Institution.objects.filter(type='1')
-        paginator1 = Paginator(foundations, 3)
-        page = request.GET.get('page')
-        fdt = paginator1.get_page(page)
-        # brak informacji na której zakładace znajduje się użytkownik
-        #NGO
-        #źle
-        ngos = Institution.objects.filter(type='2')
-        ng = []
-        for n in ngos:
-            ng.append(n)
-        random.shuffle(ng)
-        paginator2 = Paginator(ng, 5)
-        page = request.GET.get('page')
-        ngt = paginator2.get_page(page)
-        #local charities
-        lcs = Institution.objects.filter(type='3')
-        lc = []
-        for l in lcs:
-            lc.append(l)
-        random.shuffle(lc)
-        paginator3 = Paginator(lc, 5)
-        page = request.GET.get('page')
-        lct = paginator3.get_page(page)    
-        return render(request, "index.html", locals())
+        t_i = Donation.objects.values('institution_id').annotate(total_i=Count('institution_id'))
+        total_institutions = len(t_i)
+        ctx = {
+            "total_quantity": total_quantity,
+            "total_institutions": total_institutions,
+        }
+        #Pagination to be done
+        return render(request, "index.html", ctx)
+
     def post(self, request):
         first_name = request.POST.get('contact-first-name')
         last_name = request.POST.get('contact-last-name')
@@ -72,11 +49,11 @@ class LandingPage(View):
         print(text, email)
         try:
             send_mail(
-            'CONTACT',
-            text,
-            [email],
-            ['kubaslawski.webdeveloper@gmail.com'],
-            fail_silently=False,
+        'CONTACT',
+        first_name + last_name + text,
+        [email],
+        ['kubaslawski.webdeveloper@gmail.com'],
+        fail_silently=False,
             )
         except BadHeaderError:
             return HttpResponse('Invalid header found.')
@@ -89,7 +66,6 @@ class LandingPage(View):
 def validate_categories(request):
     obj = request.GET.get('categories', '')
     print(obj)
-    import json
     obj: list[int] = json.loads(obj)
     qs = Institution.objects.filter(categories__in=obj)
     return JsonResponse({institution.name: institution.id for institution in qs})
@@ -99,14 +75,17 @@ def validate_categories(request):
 class AddDonation(View):
     def get(self, request):
         form1 = CategoryDonationForm()
-        # Tylko jeden formularz 
-        return render(request, "form.html",locals())
+        # Tylko jeden formularz
+        ctx = {
+            "form1": form1,
+        }
+        return render(request, "form.html", ctx)
 
     def post(self, request):
         form1 = CategoryDonationForm(request.POST)
         if form1.is_valid():
             categories1 = form1.cleaned_data.get('categories')
-        quantity1 = request.POST.get('bags')    
+        quantity1 = request.POST.get('bags')
         institutions1 = request.POST.get('insId')
         #other data
         address1 = request.POST.get('address')
@@ -116,9 +95,13 @@ class AddDonation(View):
         data1 = request.POST.get('data')
         time1 = request.POST.get('time')
         com1 = request.POST.get('more_info')
-        user1 = request.user.id 
+        user1 = request.user.id
         email = request.user.email
-        if categories1 and institutions1 and quantity1 and address1 and city1 and code1 and phone1 and user1:
+        ctx = {
+            "form1": form1
+        }
+        if categories1 and institutions1 and quantity1 and address1 and \
+            city1 and code1 and phone1 and user1:
             #Insert a message if donate is lacking some needed informations
             d = Donation()
             d.quantity = quantity1
@@ -130,26 +113,26 @@ class AddDonation(View):
             d.pick_up_date = data1
             d.pick_up_time = data1 + " " + time1
             d.pick_up_comment = com1
-            d.user_id = user1 
+            d.user_id = user1
             d.save()
             d.categories.set(categories1)
             return redirect('base')
-        return render(request, "form.html", locals())
+        return render(request, "form.html", ctx)
 
 
 class DonationFormConfirmationView(View):
     def get(self, request):
-        return render(request, "form-confirmation.html")     
+        return render(request, "form-confirmation.html")
 
     def post(self, request):
-        return render(request, "form-confirmation.html")   
+        return render(request, "form-confirmation.html")
 
 
 class AddFundation(View):
     def get(self, request):
         form1 = AddFundationForm()
         return render(request, 'add_fundation.html', locals())
-        
+
     def post(self, request):
         form1 = AddFundationForm(request.POST)
         name1 = request.POST.get('name')
@@ -159,9 +142,9 @@ class AddFundation(View):
             category1 = form1.cleaned_data.get('categories')
             if type1 and category1 and name1 and description1:
                 i = Institution()
-                i.name = name1 
+                i.name = name1
                 i.description = description1
-                i.type = type1 
+                i.type = type1
                 i.save()
                 i.categories.set(category1)
         return render(request, 'add_fundation.html', locals())
@@ -173,7 +156,7 @@ class DonateView(View):
         return render(request, "donate.html", locals())
 
     def post(self, request):
-        if request.POST['submit']=='False':
+        if request.POST['submit'] == 'False':
             d = Donation()
             d.id = request.POST['submit']
             print(d.id)
@@ -219,7 +202,8 @@ def activate(request, uidb64, token):
         user.save()
         login(request, user)
         # return redirect('home')
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        return HttpResponse('Thank you for your email confirmation. \
+            Now you can login your account.')
     else:
         return HttpResponse('Activation link is invalid!')
 
@@ -258,18 +242,24 @@ class UserLogoutView(View):
 class UserProfileView(View):
     def get(self, request):
         logged_user = User.objects.get(id=request.user.id)
-        all_donations_not_taken = Donation.objects.filter(user_id=request.user.id).filter(is_taken=False)
-        all_donations_taken = Donation.objects.filter(user_id=request.user.id).filter(is_taken=True)
+        all_donations_not_taken = Donation.objects.filter\
+            (user_id=request.user.id).filter(is_taken=False)
+        all_donations_taken = Donation.objects.filter\
+            (user_id=request.user.id).filter(is_taken=True)
         all_donations = Donation.objects.filter(user_id=request.user.id).count()
         #num of bags
         donation_quantity = Donation.objects.filter(user_id=request.user.id)
         dq = donation_quantity.aggregate(total=Sum('quantity'))
         dq_total = dq['total']
         #num of supported org.
-        supp_fund = len(Donation.objects.filter(user_id=request.user.id).values('institution_id').annotate(total=Count('institution_id')))
-        bag_per_fund = Donation.objects.filter(user_id=request.user.id).values('institution__name').annotate(total=Sum('quantity'))
+        supp_fund = len(Donation.objects.filter\
+            (user_id=request.user.id).values('institution_id').annotate\
+                (total=Count('institution_id')))
+        bag_per_fund = Donation.objects.filter\
+            (user_id=request.user.id).values('institution__name').annotate\
+                (total=Sum('quantity'))
         return render(request, "profile.html", locals())
-    
+
     def post(self, request):
         id = request.POST.get('taken_or_not')
         print(id)
@@ -319,25 +309,25 @@ class UserSettingsView(View):
         else:
             messages.error(request, 'Please correct the error below.')
         return render(request, "settings.html", {'form2': form2})
-        
+
 class MyFoundationsView(View):
     def get(self, request):
-        #institution of user 
+        #institution of user
         institutions = Institution.objects.filter(owner=request.user.id)
         ins = institutions[0]
         donations = Donation.objects.filter(institution=ins.id)
-        #list of donating users 
+        #list of donating users
         users_who_donated = []
         for d in donations:
             users_who_donated.append(d.user)
         def remove_duplicates(x):
             return list(dict.fromkeys(x))
         users_who_donated = remove_duplicates(users_who_donated)
-        #total quantity of donated bags 
+        #total quantity of donated bags
         donation_quantity = Donation.objects.filter(institution_id=ins)
         dq = donation_quantity.aggregate(total=Sum('quantity'))
         dq_total = dq['total']
-        #num of received donations 
+        #num of received donations
         donation_received = Donation.objects.filter(is_taken=True).filter(institution_id=ins)
         dr = len(donation_received)
         #num of donations to be receive
@@ -363,6 +353,7 @@ class DonationNavbar(View):
         print(my_institution)
         return render(request, "my_foundations_navbar.html", {{"id": my_institution}})
 
+
 def taken_or_not_taken(request):
     obj = request.POST['donation_number']
     data = {
@@ -370,13 +361,11 @@ def taken_or_not_taken(request):
     }
     print(obj)
     donate = Donation.objects.get(id=obj)
-    if donate.is_taken == True: 
+    if donate.is_taken == True:
         donate.is_taken = False
         donate.save()
-        print('Zmienione na False')
     elif donate.is_taken == False:
         donate.is_taken = True
         donate.save()
-        print('Zmieniono na True')
     return JsonResponse(data)
     
