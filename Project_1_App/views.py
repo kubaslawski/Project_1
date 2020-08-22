@@ -373,7 +373,6 @@ def taken_or_not_taken(request):
         donate.save()
     return JsonResponse(data)
 
-#CHAT App
-class ChatHomepage(View):
+class MessageInboxView(View):
     def get(self, request):
-        return render(request, 'chat/chat_homepage.html')
+        return render(request, "messages/inbox.html")

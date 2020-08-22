@@ -56,10 +56,10 @@ type_of_message = (
 class Message(models.Model):
     send_from = models.ForeignKey(User,on_delete=models.CASCADE, related_name="send_from")
     send_to = models.ForeignKey(User,on_delete=models.CASCADE, related_name="send_to")
-    subject = models.CharField(choices=type_of_message)
+    subject = models.CharField(choices=type_of_message, max_length=128)
     context = models.TextField()
     is_read = models.BooleanField(default=False)
-    timestamp = models.DataTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 @receiver(pre_delete, sender=User)
 def delete_user(sender, instance, **kwargs):

@@ -65,4 +65,6 @@ urlpatterns = [
     path('reset_password_complete/',
          auth_views.PasswordResetCompleteView.as_view(template_name="password_reset/password_reset_complete.html"),
          name="password_reset_complete"),
+    #messages
+    path('my_inbox/', ex_views.MessageInboxView.as_view(), name="my_inbox"),
  ]
