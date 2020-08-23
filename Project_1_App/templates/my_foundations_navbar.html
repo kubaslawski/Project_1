@@ -23,7 +23,7 @@
       <li><a href="{% url 'base' %}" class="btn btn--without-border ">Start</a></li>
       <li><a href="{% url 'my_foundation' %}" class="btn btn--without-border ">Moja Fundacja</a></li>  
       <li><a href="{% url 'donations_details' 1 %}"  class="btn btn--without-border ">Przegląd darów</a></li>  
-      <li><a href="" class="btn btn--without-border">Top darczyńcy</a></li>
+      <li><a href="" class="{% url 'my_foundation' %}#donators">Top darczyńcy</a></li>
     </ul>
     
   </nav>

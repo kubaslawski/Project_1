@@ -37,7 +37,7 @@
           <li><a href="{% url 'base' %}" class="btn btn--without-border ">Start</a></li>
           <li><a href="{% url 'my_foundation' %}" class="btn btn--without-border ">Moja Fundacja</a></li>  
           <li><a href="{% url 'donations_details' ins.id %}"  class="btn btn--without-border ">Przegląd darów</a></li>  
-          <li><a href="" class="btn btn--without-border">Top darczyńcy</a></li>
+          <li><a href="{% url 'my_foundation' %}#donators" class="btn btn--without-border">Top darczyńcy</a></li>
         </ul>
         
       </nav>
@@ -83,11 +83,15 @@
         </div>
 
       </section>
-      <section id="steps" class="steps">
-        <h2>Top donators</h2>>
+      <section id="donators" class="steps">
+        <h2>Top donators</h2>
         <div class="steps--container">
-          ABC
-        </div>
+          <ul>
+          {% for el in first5pairs %}
+            <li><h3>{{el}}</h3></li>
+          {% endfor %}
+          </ul>
+          </div>
       </section>
   </body>
 </html>

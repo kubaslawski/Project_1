@@ -298,10 +298,10 @@ class UserSettingsView(View):
     def post(self, request):
         form1 = ProfileSettingsForm(request.POST)
         if form1.is_valid(): # uruchomienie walidacji
-            first_name1 = form.cleaned_data.get('first_name')
-            last_name1 = form.cleaned_data.get('last_name')
-            username1 = form.cleaned_data.get('username')
-            password1 = form.cleaned_data.get('password')
+            first_name1 = form1.cleaned_data.get('first_name')
+            last_name1 = form1.cleaned_data.get('last_name')
+            username1 = form1.cleaned_data.get('username')
+            password1 = form1.cleaned_data.get('password')
             user = authenticate(username=username1, password=password1)
             if user is not None:
                 if user.is_active:
@@ -349,6 +349,20 @@ class MyFoundationsView(View):
         donation_unreceived = Donation.objects.filter(is_taken=False).filter(institution_id=ins)
         dur = len(donation_unreceived)
         donators = Donation.objects.filter(institution=ins.id)
+        #users with highest num of donation
+        elements = Donation.objects.filter(institution=ins.id).order_by('quantity')
+        donationlist = {}
+        for el in elements:
+            donation = el.quantity
+            user = el.user
+            if user not in donationlist:
+                donationlist[user]=donation
+            else:
+                previousdonation = donationlist[user]
+                sum = previousdonation + donation 
+                donationlist[user] = sum 
+        first5pairs = {k: donationlist[k] for k in list(donationlist)[:5]}
+        print(first5pairs)
         return render(request, "my_foundations.html", locals())
 
 class DonationOfFoundation(View):
@@ -376,13 +390,31 @@ def taken_or_not_taken(request):
 
 class MessageInboxView(View):
     def get(self, request):
-        messages = Message.objects.filter(send_to=request.user.id).filter(type=2)
+        messages_inbox = Message.objects.filter(send_to=request.user.id).filter(type=2).order_by('-timestamp')
+        messages_starred = Message.objects.filter(send_to=request.user.id).filter(starred=True).filter(type=2)
+        messages_important = Message.objects.filter(send_to=request.user.id).filter(important=True).filter(type=2)
+        messages_sent = Message.objects.filter(send_from=request.user.id).filter(type=2)
         unread_messages = Message.objects.filter(is_read=False).count()
         ctx = {
-            "messages": messages,
+            "messages_inbox": messages_inbox,
             "unread_messages": unread_messages,
         }
         return render(request, "messages/inbox.html", ctx)
+
+    def post(self, request):
+        user_email = request.POST.get('to')
+        user_to = User.objects.get(email=user_email).id
+        subject = request.POST.get('subject')
+        context = request.POST.get('message')
+        if user_email and subject and context:
+            m = Message()
+            m.send_from_id = request.user.id
+            m.send_to_id = user_to
+            m.subject = subject
+            m.context = context 
+            m.type = 2 
+            m.save()
+        return render(request, "messages/inbox.html")
 
 
 class MessageView(View):
