@@ -138,6 +138,18 @@ class AddDonation(View):
             d.user_id = user1
             d.save()
             d.categories.set(categories1)
+            if Institution.objects.get(id=institutions1).owner:
+                m = Message()
+                m.send_from_id = request.user.id
+                m.send_to_id  = Institution.objects.get(id=institutions1).owner.id
+                m.type = 1 
+                m.subject = "New donation"
+                m.context = "New donation has been given to your foundation!" \
+                    + "Quantity: {} bags".format(quantity1) \
+                        + "Address: {}, {}, {}, {} ".format(address1, city1, code1, phone1) \
+                            + "Date: {} + Comments: {}".format(time1, com1)
+                print(m.send_from_id, m.send_to_id, m.type, m.subject)
+                m.save()
             return redirect('base')
         return render(request, "form.html", ctx)
 
@@ -397,11 +409,11 @@ def taken_or_not_taken(request):
 
 class MessageInboxView(View):
     def get(self, request):
-        messages_inbox = Message.objects.filter(send_to=request.user.id).filter(type=2).order_by('-timestamp')
-        messages_starred = Message.objects.filter(send_to=request.user.id).filter(starred=True).filter(type=2)
-        messages_important = Message.objects.filter(send_to=request.user.id).filter(important=True).filter(type=2)
-        messages_sent = Message.objects.filter(send_from=request.user.id).filter(type=2)
-        unread_messages = Message.objects.filter(is_read=False).count()
+        messages_inbox = Message.objects.filter(send_to=request.user.id).order_by('-timestamp')
+        messages_starred = Message.objects.filter(send_to=request.user.id).filter(starred=True)
+        messages_important = Message.objects.filter(send_to=request.user.id).filter(important=True)
+        messages_sent = Message.objects.filter(send_from=request.user.id)
+        unread_messages = Message.objects.filter(is_read=False).filter(send_to=request.user.id).count()
         ctx = {
             "messages_inbox": messages_inbox,
             "unread_messages": unread_messages,
@@ -427,4 +439,8 @@ class MessageInboxView(View):
 class MessageView(View):
     def get(self, request, message_id):
         message = Message.objects.get(id=message_id)
-        return render(request, "messages/message.html", {"message": message})
+        unread_messages = Message.objects.filter(is_read=False).filter(send_to=request.user.id).count()
+        if message.send_to_id == request.user.id:
+            message.is_read = True
+            message.save()
+        return render(request, "messages/message.html", {"message": message, "unread_messages": unread_messages})

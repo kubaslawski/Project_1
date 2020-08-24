@@ -71,7 +71,7 @@ body{
 }
 
 .email table {
-	font-weight: 300;
+	font-weight: 600;
 }
 
 .email table a {
@@ -244,7 +244,6 @@ body{
 					<div class="col-md-3">
 						<h2 class="grid-title"><i class="fa fa-inbox"></i> Inbox</h2>
 						<a class="btn btn-block btn-primary" data-toggle="modal" data-target="#compose-modal"><i class="fa fa-pencil"></i>&nbsp;&nbsp;NEW MESSAGE</a>
-						<a href="{% url 'base' %}" class="btn btn-block btn-primary"><i></i>&nbsp;&nbsp;Back to home page</a>
 
 						<hr>
 
@@ -297,96 +296,21 @@ body{
 						
 						<div class="padding"></div>
 						
-						<div class="table-responsive active" id="message_inbox">
-							<table class="table">
-								{% for m in messages_inbox %}
-								{% if m.is_read == True %}
+						<div class="table-responsive">
 								<tbody>
                                 <tr>
+                                    <br>
+                                    <td><h2>{{message.subject}}</h2></td>
+                                    <p style="border-style: groove; height: 325px;">{{message.context}}</p>
+                                    <!--
 									<td class="action"><input type="checkbox" /></td>
 									<td class="action"><i class="fa fa-star-o"></i></td>
 									<td class="action"><i class="fa fa-bookmark-o"></i></td>
-									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
-									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
-									<td class="time">{{m.timestamp}}</td>
-								</tr>
-								</tbody>
-								{% else %}
-								<tbody>
-									<tr>
-										<td class="action"><input type="checkbox" /></td>
-										<td class="action"><i class="fa fa-star-o"></i></td>
-										<td class="action"><i class="fa fa-bookmark-o"></i></td>
-										<td class="name"><a href="{% url 'message' m.id %}" ><b>{{m.send_from.username}}</b></a></td>
-										<td class="subject"><a href="{% url 'message' m.id %}"><b>{{m.subject}}</b></a></td>
-										<td class="time"><b>{{m.timestamp}}</b></td>
-									</tr>
-									</tbody>
-								{% endif %}
-                                {% endfor %}
-                            </table>
-                        </div>
-                        
-                        <div class="table-responsive" id="starred_inbox">
-							<table class="table">
-                                {% for m in messages_starred %}
-								<tbody>
-                                <tr>
-									<td class="action"><input type="checkbox" /></td>
-									<td class="action"><i class="fa fa-star-o"></i></td>
-									<td class="action"><i class="fa fa-bookmark-o"></i></td>
-									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
-									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
-									<td class="time">{{m.timestamp}}</td>
+                                    -->
+                                    <h5><a hrer="">Answer</a>     <a hrer="">Add to favorites</a>     <a hrer="">Delete</a></h5>
 								</tr>
                                 </tbody>
-                                {% endfor %}
-                            </table>
-                        </div>
-                        
-                        <div class="table-responsive" id="starred_inbox">
-							<table class="table">
-                                {% for m in messages_important %}
-								<tbody>
-                                <tr>
-									<td class="action"><input type="checkbox" /></td>
-									<td class="action"><i class="fa fa-star-o"></i></td>
-									<td class="action"><i class="fa fa-bookmark-o"></i></td>
-									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
-									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
-									<td class="time">{{m.timestamp}}</td>
-								</tr>
-                                </tbody>
-                                {% endfor %}
-                            </table>
-                        </div>
-                        
-                        <div class="table-responsive" id="starred_inbox">
-							<table class="table">
-                                {% for m in messages_sent %}
-								<tbody>
-                                <tr>
-									<td class="action"><input type="checkbox" /></td>
-									<td class="action"><i class="fa fa-star-o"></i></td>
-									<td class="action"><i class="fa fa-bookmark-o"></i></td>
-									<td class="name"><a href="{% url 'message' m.id %}" ><b>{{m.send_from.username}}</b></a></td>
-									<td class="subject"><a href="{% url 'message' m.id %}"><b>{{m.subject}}</b></a></td>
-									<td class="time">{{m.timestamp}}</td>
-								</tr>
-                                </tbody>
-                                {% endfor %}
-                            </table>
-						</div>
-
-						<ul class="pagination">
-							<li class="disabled"><a href="#">«</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">»</a></li>
-						</ul>						
+						</div>		
 					</div>
 					<!-- END INBOX CONTENT -->
 					
@@ -399,8 +323,7 @@ body{
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 										<h4 class="modal-title"><i class="fa fa-envelope"></i> Compose New Message</h4>
 									</div>
-									<form action="" method="post">
-                                        {% csrf_token %}
+									<form action="#" method="post">
 										<div class="modal-body">
 											<div class="form-group">
 												<input name="to" type="email" class="form-control" placeholder="To">
@@ -412,12 +335,12 @@ body{
 												<input name="bcc" type="email" class="form-control" placeholder="Bcc">
 											</div>
 											<div class="form-group">
-												<input name="subject" type="text" class="form-control" placeholder="Subject">
+												<input name="subject" type="email" class="form-control" placeholder="Subject">
 											</div>
 											<div class="form-group">
 												<textarea name="message" id="email_message" class="form-control" placeholder="Message" style="height: 120px;"></textarea>
 											</div>
-											<div class="form-group">
+											<div class="form-group">														<input type="file" name="attachment">
 											</div>
 										</div>
 										<div class="modal-footer">

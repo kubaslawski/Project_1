@@ -1,0 +1,97 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Szczegóły użytkownika</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+  </head>
+
+  <body>
+    <header class="header--main-page">
+      <nav class="container container--70">
+        <ul class="nav--actions">
+          {% if user.is_authenticated %}
+          <ul class="nav--actions">
+            <li class="logged-user">
+              Witaj {{user.get_username}}
+              <ul class="dropdown">
+                <li><a href="{% url 'user_profile' %}">Profil</a></li>
+                <li><a href="{% url 'settings' %}">Ustawienia użytkownika</a></li>
+                <li><a href="/admin">Panel Administracyjny</a></li>
+                <li><a href="{% url 'logout' %}">Wyloguj</a></li>
+              </ul>
+            </li>
+          </ul>
+          {% else %}
+          <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a></li>
+          <li><a href="{% url 'reset_password' %}" class="btn btn--small btn--without-border">Zapomniałem hasła</a></li>
+          <li><a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+          {% endif %}
+        </ul>
+    
+        <ul>
+          <li><a href="{% url 'base' %}" class="btn btn--without-border ">Start</a></li>
+          <li><a href="{% url 'my_foundation' %}" class="btn btn--without-border ">Moja Fundacja</a></li>  
+          <li><a href="{% url 'donations_details' ins.id %}"  class="btn btn--without-border ">Przegląd darów</a></li>  
+          <li><a href="{% url 'my_foundation' %}#donators" class="btn btn--without-border">Top darczyńcy</a></li>
+        </ul>
+        
+      </nav>
+      <div class="slogan container container--90">
+        <div class="slogan--item">
+          <h1>
+            Zacznij pomagać!<br />
+            Oddaj niechciane rzeczy w zaufane ręce
+          </h1>
+        </div>
+      </div>
+    </header>
+    <section id="steps" class="steps">
+        <h2>{{ins.name}}</h2>
+  
+        <div class="steps--container">
+          <div class="steps--item">
+            <span class="icon icon--hands"></span>
+            <h3>Użytkownicy którzy ją wsparli</h3>
+            <p>
+            {% for user in users_who_donated %}
+            {{user.first_name}} {{user.last_name}}<br>
+            {% endfor %}
+            <p>
+          </div>
+          <div class="steps--item">
+            <span class="icon icon--arrow"></span>
+            <h3>Ilość przekazanych worków:</h3>
+            <p>{{dq_total}}</p>
+          </div>
+          <div class="steps--item">
+            <span class="icon icon--glasses"></span>
+            <h3>Ilość odebranych darów:</h3>
+            <p>{{dr}}</p>
+            <a href="{% url 'donations_details' ins.id %}#steps" class="btn btn">Zobacz szczegóły</a>
+          </div>
+          <div class="steps--item">
+            <span class="icon icon--courier"></span>
+            <h3>Ilość darów do odebrania:</h3>
+            <p>{{dur}}</p>
+            <a href="{% url 'donations_details' ins.id %}#steps" class="btn btn">Zobacz szczegóły</a>
+          </div>
+        </div>
+
+      </section>
+      <section id="donators" class="steps">
+        <h2>Top donators</h2>
+        <div class="steps--container">
+          <ul>
+          {% for el in first5pairs %}
+            <li><h3>{{el}}</h3></li>
+          {% endfor %}
+          </ul>
+          </div>
+      </section>
+  </body>
+</html>

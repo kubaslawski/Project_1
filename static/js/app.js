@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       var insArrName = []
       var insArrId = []
-      var InstitutionInputs = document.getElementsByName('organization')
+      var InstitutionInputs = document.getElementsByName('institutions')
       for (var i=0; i<InstitutionInputs.length; i++) {
         if (InstitutionInputs[i].checked) {
           var insId = InstitutionInputs[i].value;
@@ -254,8 +254,8 @@ document.addEventListener("DOMContentLoaded", function() {
           insArrName.push(insName)
         }
       }
-      //console.log(insArrName)
-      //console.log(insArrId)
+
+      document.getElementById("summary-institutions").innerHTML = insArrName.join(", ")
 
       var catArrName = []
       var catArrId = []
@@ -268,12 +268,17 @@ document.addEventListener("DOMContentLoaded", function() {
           catArrId.push(catId)
         }
       }
-      //console.log(catArrName)
+      //console.log(catArrId)
       
       var catArrIdInt = catArrId.map(v => parseInt(v, 10));
       //console.log(catArrIdInt)
+       
       
       var catArrIdString = JSON.stringify(catArrIdInt)
+      var kids = document.getElementById("institution-checkbox").children;
+      for (var i=0; i<kids.length; i=i){
+        kids[i].remove(); 
+      }
       if (catArrId.length > 0) {
         $.ajax({
           type: "GET",
@@ -283,27 +288,19 @@ document.addEventListener("DOMContentLoaded", function() {
             "categories": catArrIdString
           }
         }).done(function(institutionsByName) {
+          //name, id instead of key, value
           var len = 0 
           for (var [key, value] of Object.entries(institutionsByName)){
             len = len + 1 
           }
-          
-          var institutionDiv = document.getElementById("div3")
-
-          if (document.getElementById("div3").className == "active"){
-            //console.log("ACTIVE")
-            //console.log(len)
+          console.log(len)
           var checkboxLength = document.getElementById("institution-checkbox").childElementCount
-            if(checkboxLength>len){
-              for(i=len; i=i; i<checkboxLength){
-              document.getElementById("institution-checkbox").children[len].remove()
-              }
-
-            }
-            for (var [name, value] of Object.entries(institutionsByName)){
-                  document.getElementById("institution-checkbox").innerHTML +=
+          //console.log(checkboxLength)
+          console.log(Object.length)
+            for (var [name, id] of Object.entries(institutionsByName)){
+                  document.getElementById("institution-checkbox").innerHTML += 
                   '<label name="organization_label">' +
-                  '<input type="radio" name="organization" value="' + value + '" id="institution-key"/>' +
+                  '<input type="radio" name="organization" value="' + id + '" id="institution-key"/>' +
                   '<span class="checkbox radio"></span>' + 
                   '<span class="description">' + 
                     '<div class="title">'+ name + '</div>' +
@@ -311,15 +308,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     '</div>' +
                   '</span>' + 
                 '</label>'
-          }    
-          //if(checkboxLength>len){
-          //  for(i=len; i=i; i<checkboxLength){
-          //   document.getElementById("institution-checkbox").children[len].remove()
-          //  }
-
-          //}
+          }
+          var kids = document.getElementById("institution-checkbox").children;
+          for (var i=0; i<kids.length; i=i){
+            kids[i].remove();
+          }
+          if(checkboxLength>len){
+            for(i=len; i=i; i<checkboxLength){
+              document.getElementById("institution-checkbox").children[i].remove()
+            }
 
           }
+
         })
         .fail(function(e) {
           alert( "error" );
@@ -345,9 +345,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
       var bagQuantity = document.getElementById('bags').value;
       document.getElementById('summary-quantity').innerHTML = "Oddajesz " + bagQuantity + " worków" + catArrName.join(", ") 
-      document.getElementById('summary-institutions').innerHTML = insArrName.join(", ")
-      var institutionIdInput = insArrId[0]
-      document.getElementById('insId').value = institutionIdInput
       //var type = document.getElementById('id_type').value;
 
       //document.getElementById("summary-institutions").innerHTML = type
@@ -400,20 +397,24 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 
-  function getCookie(c_name)
-  {
-      if (document.cookie.length > 0)
-      {
-          c_start = document.cookie.indexOf(c_name + "=");
-          if (c_start != -1)
-          {
-              c_start = c_start + c_name.length + 1;
-              c_end = document.cookie.indexOf(";", c_start);
-              if (c_end == -1) c_end = document.cookie.length;
-              return unescape(document.cookie.substring(c_start,c_end));
-          }
-      }
-      return "";
-  }
+
+}
+
+
+
 });

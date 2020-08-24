@@ -1,0 +1,32 @@
+<nav class="container container--70">
+    <ul class="nav--actions">
+      {% if user.is_authenticated %}
+      <ul class="nav--actions">
+        <li class="logged-user">
+          Hello {{user.get_username}}
+          <ul class="dropdown">
+            <li><a href="{% url 'user_profile' %}">Profile</a></li>
+            <li><a href="{% url 'settings' %}">Settings</a></li>
+            {% if user.is_superuser %}   
+            <li><a href="/admin">Administration Panel</a></li>
+            {% endif %}
+            <li><a href="{% url 'logout' %}">Log out</a></li>
+            <li><a href="{% url 'my_inbox' %}">My inbox</a></li>
+          </ul>
+        </li>
+      </ul>
+      {% else %}
+      <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Log in</a></li>
+      <li><a href="{% url 'reset_password' %}" class="btn btn--small btn--without-border">Forgotten password</a></li>
+      <li><a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Sign up</a></li>
+      {% endif %}
+    </ul>
+
+    <ul>
+      <li><a href="{% url 'base' %}" class="btn btn--without-border ">Home</a></li>
+      <li><a href="{% url 'my_foundation' %}" class="btn btn--without-border ">My foundation</a></li>  
+      <li><a href="{% url 'donations_details' 1 %}"  class="btn btn--without-border ">Review of donations</a></li>  
+      <li><a href="{% url 'my_foundation' %}#donators"class="btn btn--without-border">Top donators</a></li>
+    </ul>
+    
+  </nav>
