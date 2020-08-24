@@ -17,8 +17,7 @@
       <div class="slogan container container--90">
         <div class="slogan--item">
           <h1>
-            Zacznij pomagać!<br />
-            Oddaj niechciane rzeczy w zaufane ręce
+            Start helping the others!<br />
           </h1>
         </div>
       </div>
@@ -27,14 +26,19 @@
     <section id="stats" class="stats">
       <div class="container container--85">
         <div class="stats--item">
+          {% if user.is_authenticated %}
           <em>{{total_quantity}}</em>
-          <h3>Oddanych worków</h3>
+          <h3>given bags</h3>
+          {% else %}
+          <em>Log in to start help!</em>
+          {% endif %}
           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius est beatae, quod accusamus illum tempora!</p>
         </div>
 
         <div class="stats--item">
+          <h3>Our users supported</h3>
           <em>{{total_institutions}}</em>
-          <h3>Wspartych organizacji</h3>
+          <h3>organisations</h3>
           <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam magnam, sint nihil cupiditate quas quam.</p>
         </div>
 
@@ -42,37 +46,37 @@
     </section>
 
     <section id="steps" class="steps">
-      <h2>Wystarczą 4 proste kroki</h2>
+      <h2>Just 4 simple steps</h2>
 
       <div class="steps--container">
         <div class="steps--item">
           <span class="icon icon--hands"></span>
-          <h3>Wybierz rzeczy</h3>
-          <p>ubrania, zabawki, sprzęt i inne</p>
+          <h3>Choose the things you want get rid of</h3>
+          <p>clothes, toys and many other staff</p>
         </div>
         <div class="steps--item">
           <span class="icon icon--arrow"></span>
-          <h3>Spakuj je</h3>
-          <p>skorzystaj z worków na śmieci</p>
+          <h3>Pack them</h3>
+          <p>using black bags</p>
         </div>
         <div class="steps--item">
           <span class="icon icon--glasses"></span>
-          <h3>Zdecyduj komu chcesz pomóc</h3>
-          <p>wybierz zaufane miejsce</p>
+          <h3>Make your choice which foundation you support</h3>
+          <p>Give us the address where you left the things</p>
         </div>
         <div class="steps--item">
           <span class="icon icon--courier"></span>
-          <h3>Zamów kuriera</h3>
-          <p>kurier przyjedzie w dogodnym terminie</p>
+          <h3>Don't worry</h3>
+          <p>We will take care of the rest!</p>
         </div>
       </div>
 
-      <a href="{% url 'register' %}" class="btn btn--large">Załóż konto</a>
+      <a href="{% url 'register' %}" class="btn btn--large">Sign up</a>
     </section>
 
     <section id="about-us" class="about-us">
       <div class="about-us--text">
-        <h2>O nas</h2>
+        <h2>About us</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas vitae animi rem pariatur incidunt libero optio esse quisquam illo omnis.</p>
         <img src="{% static 'images/signature.svg' %}" class="about-us--text-signature" alt="Signature" />
       </div>
@@ -80,8 +84,8 @@
     </section>
 
      <section id="help" class="help">
-      <h2>Komu pomagamy?</h2>
-      <h3>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</h3>
+      <h2>What foundations do we support?</h2>
+      <h3>In our website you can find many foundations that we work with, you can also set up your own institution!</h3>
 
       <ul class="help--buttons">
         <li data-id="1"><a href="{% url 'base' %}#help"  class="btn btn--without-border " onclick="SwitchInstitution()" id="pag_li_1">Fundacjom</a></li>
@@ -96,7 +100,7 @@
           <li>
             <div class="col">
               <div class="title">{{t.name}}</div>
-              <div class="subtitle">Cel i misja: {{t.description}}</div>
+              <div class="subtitle">Target and mission: {{t.description}}</div>
             </div>
 
             <div class="col"><div class="text">{% for c in t.categories.all %} {{c}}, {% endfor %}</div></div>
@@ -138,7 +142,7 @@
           <li>
             <div class="col">
               <div class="title">{{t.name}}</div>
-              <div class="subtitle">Cel i misja: {{t.description}}</div>
+              <div class="subtitle">Target and mission: {{t.description}}</div>
             </div>
 
             <div class="col"><div class="text">{% for c in t.categories.all %} {{c}}, {% endfor %}</div></div>
@@ -178,7 +182,7 @@
           <li>
             <div class="col">
               <div class="title">{{t.name}}</div>
-              <div class="subtitle">Cel i misja: {{t.description}}</div>
+              <div class="subtitle">Target and mission: {{t.description}}</div>
             </div>
 
             <div class="col"><div class="text">{% for c in t.categories.all %} {{c}} {% endfor %}</div></div>
@@ -214,16 +218,16 @@
 
     <footer>
       <div id="contact" class="contact">
-        <h2>Skontaktuj się z nami</h2>
-        <h3>Formularz kontaktowy</h3>
+        <h2>Contact with us!</h2>
+        <h3>Contact form, left your email in the text message :) </h3>
         <form class="form--contact" method="post">
           {% csrf_token %}
-          <div class="form-group form-group--50"><input type="text" name="name" placeholder="Imię" id="contact-first-name" /></div>
-          <div class="form-group form-group--50"><input type="text" name="surname" placeholder="Nazwisko" id="contact-last-name"/></div>
+          <div class="form-group form-group--50"><input type="text" name="name" placeholder="First name" id="contact-first-name" /></div>
+          <div class="form-group form-group--50"><input type="text" name="surname" placeholder="Last name" id="contact-last-name"/></div>
 
-          <div class="form-group"><textarea name="message" placeholder="Wiadomość" rows="1" id="contact-text"></textarea></div>
+          <div class="form-group"><textarea name="message" placeholder="Message, don't forget about the email" rows="1" id="contact-text"></textarea></div>
 
-          <button class="btn" type="submit">Wyślij</button>
+          <button class="btn" type="submit">Send</button>
         </form>
       </div>
       <div class="bottom-line">

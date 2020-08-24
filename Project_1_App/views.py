@@ -48,12 +48,19 @@ class LandingPage(View):
         type_3 = Institution.objects.filter(type=3)
         p_3 = Paginator(type_3, 3)
         page_obj_3 = p_3.get_page(page_number)
+        try:
+            user_foundation = Institution.objects.get(owner_id=request.user.id)
+        except:
+            user_foundation = None
+            
         ctx = {
             "total_quantity": total_quantity,
             "total_institutions": total_institutions,
             "page_obj_1": page_obj_1,
             "page_obj_2": page_obj_2,
             "page_obj_3": page_obj_3,
+            "user_foundation": user_foundation,
+
         }
         return render(request, "index.html", ctx)
 
@@ -61,7 +68,7 @@ class LandingPage(View):
         first_name = request.POST.get('name')
         last_name = request.POST.get('surname')
         text = request.POST.get('message')
-        email_from = str(request.user.email)
+        email_from = "kubaslawski.webdeveloper@gmail.com"
         email_to = 'kubaslawski.webdeveloper@gmail.com'
         print(type(email_from))
         send_mail(
