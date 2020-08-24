@@ -135,3 +135,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'kubaslawski.webdeveloper@gmail.com'
 EMAIL_HOST_PASSWORD = 'Jagdtiger128'
 EMAIL_PORT = 587
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
