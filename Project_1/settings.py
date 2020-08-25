@@ -137,4 +137,4 @@ EMAIL_HOST_PASSWORD = 'Jagdtiger128'
 EMAIL_PORT = 587
 
 # Activate Django-Heroku.
-django_heroku.settings(locals())
+#django_heroku.settings(locals())
