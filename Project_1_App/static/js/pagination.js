@@ -46,4 +46,3 @@ function SwitchInstitution() {
     return
   }
 }
-

@@ -413,11 +413,25 @@ class MessageInboxView(View):
         messages_starred = Message.objects.filter(send_to=request.user.id).filter(starred=True)
         messages_important = Message.objects.filter(send_to=request.user.id).filter(important=True)
         messages_sent = Message.objects.filter(send_from=request.user.id)
+        messages_draft = Message.objects.filter(draft=True).filter(send_from=request.user.id)
+        messages_spam = Message.objects.filter(spam=True)
         unread_messages = Message.objects.filter(is_read=False).filter(send_to=request.user.id).count()
+        unread_starred = Message.objects.filter(is_read=False).filter(send_to=request.user.id).filter(starred=True).count()
+        unread_important = Message.objects.filter(is_read=False).filter(send_to=request.user.id).filter(important=True).count()
+        unread_spam = Message.objects.filter(is_read=False).filter(send_to=request.user.id).filter(spam=True).count()
         ctx = {
             "messages_inbox": messages_inbox,
+            "messages_starred": messages_starred,
+            "messages_important": messages_important,
+            "messages_sent": messages_sent,
+            "messages_draft": messages_draft,
+            "messages_spam": messages_spam,
             "unread_messages": unread_messages,
-        }
+            "unread_starred": unread_starred,
+            "unread_important": unread_important,
+            "unread_spam": unread_spam,
+        }   
+        print(request.user.id)
         return render(request, "messages/inbox.html", ctx)
 
     def post(self, request):

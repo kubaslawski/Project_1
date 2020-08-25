@@ -54,8 +54,8 @@ type_of_message = (
 )
 
 class Message(models.Model):
-    send_from = models.ForeignKey(User,on_delete=models.CASCADE, related_name="send_from")
-    send_to = models.ForeignKey(User,on_delete=models.CASCADE, related_name="send_to")
+    send_from = models.ForeignKey(User,on_delete=models.CASCADE, related_name="send_from", null=True)
+    send_to = models.ForeignKey(User,on_delete=models.CASCADE, related_name="send_to", null=True)
     type = models.CharField(choices=type_of_message, max_length=32, default=1)
     subject = models.CharField(max_length=128)
     context = models.CharField(max_length=256)
@@ -63,6 +63,8 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     starred = models.BooleanField(default=False)
     important = models.BooleanField(default=False)
+    draft = models.BooleanField(default=False)
+    spam = models.BooleanField(default=False)
     
 
 @receiver(pre_delete, sender=User)
