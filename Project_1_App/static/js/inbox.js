@@ -38,7 +38,6 @@ function SwitchInbox() {
         return 
     }
     if(target.id == 'inbox_id_2'){
-        console.log(target)
         inbox.hidden = true  
         starred.hidden = false
         important.hidden = true  
@@ -67,7 +66,28 @@ function SwitchInbox() {
     }
 }
 
-function TestFunc() {
-    console.log('TEST')
-  
+
+  var CheckedMessagesArr = []
+  var Messages = document.getElementsByName("checked-message")
+  for (var i=0; i<Messages.length; i++){
+      if (Messages[i].checked){
+          var CheckedMessage = Messages[i].value;
+          CheckedMessagesArr.push(CheckedMessage)
+      }
+  }
+  console.log(CheckedMessagesArr)
+
+  function MarkAsRead(){
+      $.ajax({
+          type: "GET", 
+          url: "/ajax/checkedmessages/",
+          dataType: "json", 
+          data: {
+              "CheckedMessageArr": CheckedMessagesArr
+          }
+      }).done(function(){
+          console.log('Ajax, MarkAsRead success')
+      }).fail(function(e) {
+          console.log("Ajax MarkAsRead failed")
+      })
   }

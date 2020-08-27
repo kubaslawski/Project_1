@@ -397,7 +397,6 @@ def taken_or_not_taken(request):
     data = {
         "id": obj
     }
-    print(obj)
     donate = Donation.objects.get(id=obj)
     if donate.is_taken == True:
         donate.is_taken = False
@@ -406,6 +405,15 @@ def taken_or_not_taken(request):
         donate.is_taken = True
         donate.save()
     return JsonResponse(data)
+
+def checkedmessages(request):
+    obj = request.GET.get['CheckedMessagesArr']
+    data = {
+        "id": obj
+    }
+    print(obj)
+    for num in obj:
+        Message.objects.get(id=int(num)).is_read = True 
 
 class MessageInboxView(View):
     def get(self, request):
@@ -431,7 +439,6 @@ class MessageInboxView(View):
             "unread_important": unread_important,
             "unread_spam": unread_spam,
         }   
-        print(request.user.id)
         return render(request, "messages/inbox.html", ctx)
 
     def post(self, request):

@@ -277,7 +277,7 @@ body{
 										Action <span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu" role="menu">
-										<li><a href="#">Mark as read </a></li>
+										<li><a href="#" onclick="MarkAsRead()">Mark as read </a></li>
 										<li><a href="#">Mark as unread</a></li>
 										<li><a href="#">Mark as important</a></li>
 										<li class="divider"></li>
@@ -306,9 +306,9 @@ body{
 								{% if m.is_read == True %}
 								<tbody>
                                 <tr>
-									<td class="action"><input type="checkbox" /></td>
-									<td class="action"><i class="fa fa-star-o"></i></td>
-									<td class="action"><i class="fa fa-bookmark-o"></i></td>
+									<td class="action"><input type="checkbox" id="checkbox-message{{m.id}}" name="checked-message" value={{m.id}} /></td>
+									<td class="action"><i class="fa fa-star-o" id="star-message{{m.id}}"></i></td>
+									<td class="action"><i class="fa fa-bookmark-o" id="star-message{{m.id}}"></i></td>
 									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
 									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
 									<td class="time">{{m.timestamp}}</td>

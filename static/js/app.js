@@ -254,6 +254,7 @@ document.addEventListener("DOMContentLoaded", function() {
           insArrName.push(insName)
         }
       }
+    
 
       document.getElementById("summary-institutions").innerHTML = insArrName.join(", ")
 
@@ -271,7 +272,6 @@ document.addEventListener("DOMContentLoaded", function() {
       //console.log(catArrId)
       
       var catArrIdInt = catArrId.map(v => parseInt(v, 10));
-      //console.log(catArrIdInt)
        
       
       var catArrIdString = JSON.stringify(catArrIdInt)
@@ -288,16 +288,14 @@ document.addEventListener("DOMContentLoaded", function() {
             "categories": catArrIdString
           }
         }).done(function(institutionsByName) {
-          //name, id instead of key, value
           var len = 0 
-          for (var [key, value] of Object.entries(institutionsByName)){
+          for (var [name, id] of Object.entries(institutionsByName)){
             len = len + 1 
           }
           console.log(len)
           var checkboxLength = document.getElementById("institution-checkbox").childElementCount
-          //console.log(checkboxLength)
-          console.log(Object.length)
             for (var [name, id] of Object.entries(institutionsByName)){
+                  console.log(name, id)
                   document.getElementById("institution-checkbox").innerHTML += 
                   '<label name="organization_label">' +
                   '<input type="radio" name="organization" value="' + id + '" id="institution-key"/>' +
@@ -309,16 +307,17 @@ document.addEventListener("DOMContentLoaded", function() {
                   '</span>' + 
                 '</label>'
           }
-          var kids = document.getElementById("institution-checkbox").children;
-          for (var i=0; i<kids.length; i=i){
-            kids[i].remove();
-          }
-          if(checkboxLength>len){
-            for(i=len; i=i; i<checkboxLength){
-              document.getElementById("institution-checkbox").children[i].remove()
-            }
+          
+          //var kids = document.getElementById("institution-checkbox").children;
+          //for (var i=0; i<kids.length; i=i){
+          //  kids[i].remove();
+          //}
+          //if(checkboxLength>len){
+            //for(i=len; i=i; i<checkboxLength){
+              //document.getElementById("institution-checkbox").children[i].remove()
+            //}
 
-          }
+          //}
 
         })
         .fail(function(e) {

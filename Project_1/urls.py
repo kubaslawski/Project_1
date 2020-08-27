@@ -26,6 +26,7 @@ urlpatterns = [
     #AJAX REQUEST FORM
     url(r'^ajax/validate_categories/$', views.validate_categories, name='validate_categories'),
     url(r'^ajax/taken_or_not_taken/$', views.taken_or_not_taken, name='taken_or_not_taken'),
+    url(r'^ajax/checkedmessages/$', views.checkedmessages, name='checkedmessages'),
     #api
     path(r'^api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
