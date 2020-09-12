@@ -28,7 +28,6 @@ function SwitchInbox() {
     var important = document.getElementById('important_inbox')
     var sent = document.getElementById('sent_inbox')
     if(target.id == 'inbox_id_1'){
-        console.log(target)
         inbox.hidden = false  
         starred.hidden = true
         important.hidden = true  
@@ -38,7 +37,6 @@ function SwitchInbox() {
         return 
     }
     if(target.id == 'inbox_id_2'){
-        console.log(target)
         inbox.hidden = true  
         starred.hidden = false
         important.hidden = true  

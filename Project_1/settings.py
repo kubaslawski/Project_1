@@ -110,6 +110,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'Project_1/media') 
+MEDIA_URL = '/media/'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

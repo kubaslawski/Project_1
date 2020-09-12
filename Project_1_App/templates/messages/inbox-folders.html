@@ -1,0 +1,11 @@
+<div>
+    <ul class="nav nav-pills nav-stacked">
+        <h2 class="grid-title"><i class="fa fa-inbox"></i> Folders</h2>
+        <li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_1">Inbox {% if unread_messages == 0 %}  {% else %} ({{unread_messages}}) {% endif %}</button></li>
+        <li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_2">Starred {% if unread_starred == 0 %}  {% else %} ({{unread_starred}}) {% endif %}</button></li>
+        <li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_3">Important {% if unread_important == 0 %}  {% else %} ({{unread_important}}) {% endif %}</button></li>
+        <li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_4">Sent</button></li>
+        <li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_5">Drafts</button></li>
+        <li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_6">Spam {% if unread_spam == 0 %}  {% else %} ({{unread_spam}}) {% endif %}</button></li>
+    </ul>
+</div>

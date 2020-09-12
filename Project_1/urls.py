@@ -22,6 +22,9 @@ from Project_1_App import views as ex_views
 from Project_1_App.views import LandingPage, signup, activate
 from django.contrib.auth import views as auth_views
 from Project_1_App.forms import EmailValidationOnForgotPassword
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     #AJAX REQUEST FORM
     url(r'^ajax/validate_categories/$', views.validate_categories, name='validate_categories'),
@@ -70,3 +73,8 @@ urlpatterns = [
     path('my_inbox/', ex_views.MessageInboxView.as_view(), name="my_inbox"),
     path('message/<int:message_id>/', ex_views.MessageView.as_view(), name="message"),
  ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+    document_root=settings.MEDIA_ROOT
+)

@@ -52,6 +52,8 @@ class LandingPage(View):
             user_foundation = Institution.objects.get(owner_id=request.user.id)
         except:
             user_foundation = None
+        #unread messages 
+        unread_messages = Message.objects.filter(send_to=request.user.id).filter(is_read=False).count()
             
         ctx = {
             "total_quantity": total_quantity,
@@ -60,6 +62,7 @@ class LandingPage(View):
             "page_obj_2": page_obj_2,
             "page_obj_3": page_obj_3,
             "user_foundation": user_foundation,
+            "unread_messages": unread_messages,
 
         }
         return render(request, "index.html", ctx)
@@ -459,9 +462,48 @@ class MessageInboxView(View):
 
 class MessageView(View):
     def get(self, request, message_id):
-        message = Message.objects.get(id=message_id)
+        messages_inbox = Message.objects.filter(send_to=request.user.id).order_by('-timestamp')
+        messages_starred = Message.objects.filter(send_to=request.user.id).filter(starred=True)
+        messages_important = Message.objects.filter(send_to=request.user.id).filter(important=True)
+        messages_sent = Message.objects.filter(send_from=request.user.id)
+        messages_draft = Message.objects.filter(draft=True).filter(send_from=request.user.id)
+        messages_spam = Message.objects.filter(spam=True)
         unread_messages = Message.objects.filter(is_read=False).filter(send_to=request.user.id).count()
+        unread_starred = Message.objects.filter(is_read=False).filter(send_to=request.user.id).filter(starred=True).count()
+        unread_important = Message.objects.filter(is_read=False).filter(send_to=request.user.id).filter(important=True).count()
+        unread_spam = Message.objects.filter(is_read=False).filter(send_to=request.user.id).filter(spam=True).count()
+        message = Message.objects.get(id=message_id)
+        send_from = User.objects.get(id=message.send_from_id).email
+        ctx = {
+            "messages_inbox": messages_inbox,
+            "messages_starred": messages_starred,
+            "messages_important": messages_important,
+            "messages_sent": messages_sent,
+            "messages_draft": messages_draft,
+            "messages_spam": messages_spam,
+            "unread_messages": unread_messages,
+            "unread_starred": unread_starred,
+            "unread_important": unread_important,
+            "unread_spam": unread_spam,
+            "message": message,
+            "send_from": send_from,
+        }   
         if message.send_to_id == request.user.id:
             message.is_read = True
             message.save()
-        return render(request, "messages/message.html", {"message": message, "unread_messages": unread_messages})
+        return render(request, "messages/message.html", ctx)
+
+    def post(self, request, message_id):
+        user_email = request.POST.get('to')
+        user_to = User.objects.get(email=user_email).id
+        subject = request.POST.get('subject')
+        context = request.POST.get('message')
+        if user_email and subject and context:
+            m = Message()
+            m.send_from_id = request.user.id
+            m.send_to_id = user_to
+            m.subject = subject
+            m.context = context 
+            m.type = 2 
+            m.save()
+        return render(request, "messages/message.html")
