@@ -96,7 +96,6 @@ def validate_categories(request):
     return JsonResponse({institution.name: institution.id for institution in qs})
 
 
-#TO DO
 class AddDonation(View):
     def get(self, request):
         form1 = CategoryDonationForm()
@@ -430,6 +429,21 @@ class MessageInboxView(View):
         unread_starred = Message.objects.filter(is_read=False).filter(send_to=request.user.id).filter(starred=True).count()
         unread_important = Message.objects.filter(is_read=False).filter(send_to=request.user.id).filter(important=True).count()
         unread_spam = Message.objects.filter(is_read=False).filter(send_to=request.user.id).filter(spam=True).count()
+        ###
+        page_number = request.GET.get('page')
+        p_1 = Paginator(messages_inbox, 10)
+        page_obj_1 = p_1.get_page(page_number)
+        p_2 = Paginator(messages_starred, 10)
+        page_obj_2 = p_2.get_page(page_number)
+        p_3 = Paginator(messages_important, 10)
+        page_obj_3 = p_3.get_page(page_number)
+        p_4 = Paginator(messages_sent, 10)
+        page_obj_4 = p_4.get_page(page_number)
+        p_5 = Paginator(messages_draft, 10)
+        page_obj_5 = p_5.get_page(page_number)
+        p_6 = Paginator(messages_spam, 10)
+        page_obj_6 = p_6.get_page(page_number)
+
         ctx = {
             "messages_inbox": messages_inbox,
             "messages_starred": messages_starred,
@@ -441,7 +455,14 @@ class MessageInboxView(View):
             "unread_starred": unread_starred,
             "unread_important": unread_important,
             "unread_spam": unread_spam,
+            "page_obj_1": page_obj_1,
+            "page_obj_2": page_obj_2,
+            "page_obj_3": page_obj_3,
+            "page_obj_4": page_obj_4,
+            "page_obj_5": page_obj_5,
+            "page_obj_6": page_obj_6,
         }   
+
         return render(request, "messages/inbox.html", ctx)
 
     def post(self, request):
