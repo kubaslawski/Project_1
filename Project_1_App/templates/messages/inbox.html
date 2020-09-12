@@ -432,10 +432,10 @@ body{
 										{% endif %}
 								
 										<span class="current">
-											Page {{ page_obj_1.number }} of {{ page_obj_1.paginator.num_pages }}.
+											Page {{ page_obj_3.number }} of {{ page_obj_3.paginator.num_pages }}.
 										</span>
 								
-										{% if page_obj_1.has_next %}
+										{% if page_obj_3.has_next %}
 											<a href="?page={{ page_obj_3.next_page_number }}#help">next</a>
 											<a href="?page={{ page_obj_3.paginator.num_pages }}#help">last &raquo;</a>
 										{% endif %}
@@ -469,7 +469,7 @@ body{
 											Page {{ page_obj_4.number }} of {{ page_obj_4.paginator.num_pages }}.
 										</span>
 								
-										{% if page_obj_1.has_next %}
+										{% if page_obj_4.has_next %}
 											<a href="?page={{ page_obj_4.next_page_number }}#help">next</a>
 											<a href="?page={{ page_obj_4.paginator.num_pages }}#help">last &raquo;</a>
 										{% endif %}
@@ -503,7 +503,7 @@ body{
 											Page {{ page_obj_5.number }} of {{ page_obj_5.paginator.num_pages }}.
 										</span>
 								
-										{% if page_obj_1.has_next %}
+										{% if page_obj_5.has_next %}
 											<a href="?page={{ page_obj_5.next_page_number }}#help">next</a>
 											<a href="?page={{ page_obj_5.paginator.num_pages }}#help">last &raquo;</a>
 										{% endif %}
