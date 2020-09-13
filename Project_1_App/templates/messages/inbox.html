@@ -308,9 +308,6 @@ body{
 								{% if m.is_read == True %}
 								<tbody>
                                 <tr>
-									<td class="action"><input type="checkbox" id="checkbox-message{{m.id}}" name="checked-message" value={{m.id}} /></td>
-									<td class="action"><i class="fa fa-star-o" id="star-message{{m.id}}"></i></td>
-									<td class="action"><i class="fa fa-bookmark-o" id="star-message{{m.id}}"></i></td>
 									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
 									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
 									<td class="time">{{m.timestamp}}</td>
@@ -319,9 +316,7 @@ body{
 								{% else %}
 								<tbody>
 									<tr>
-										<td class="action"><input type="checkbox" /></td>
-										<td class="action"><i class="fa fa-star-o"></i></td>
-										<td class="action"><i class="fa fa-bookmark-o"></i></td>
+
 										<td class="name"><a href="{% url 'message' m.id %}" ><b>{{m.send_from.username}}</b></a></td>
 										<td class="subject"><a href="{% url 'message' m.id %}"><b>{{m.subject}}</b></a></td>
 										<td class="time"><b>{{m.timestamp}}</b></td>
@@ -356,9 +351,6 @@ body{
 								{% if m.is_read == True %}
 								<tbody>
                                 <tr>
-									<td class="action"><input type="checkbox" /></td>
-									<td class="action"><i class="fa fa-star-o"></i></td>
-									<td class="action"><i class="fa fa-bookmark-o"></i></td>
 									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
 									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
 									<td class="time">{{m.timestamp}}</td>
@@ -367,9 +359,6 @@ body{
 								{% else %}
 								<tbody>
 									<tr>
-										<td class="action"><input type="checkbox" /></td>
-										<td class="action"><i class="fa fa-star-o"></i></td>
-										<td class="action"><i class="fa fa-bookmark-o"></i></td>
 										<td class="name"><a href="{% url 'message' m.id %}" ><b>{{m.send_from.username}}</b></a></td>
 										<td class="subject"><a href="{% url 'message' m.id %}"><b>{{m.subject}}</b></a></td>
 										<td class="time"><b>{{m.timestamp}}</b></td>

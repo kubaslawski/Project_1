@@ -3,7 +3,7 @@
       {% if user.is_authenticated %}
       <ul class="nav--actions">
         <li class="logged-user">
-          Hello {{user.get_username}}
+          Hello {{user.get_username}} ({{unread_messages}} unread messages)
           <ul class="dropdown">
             <li><a href="{% url 'user_profile' %}#stats">Profile</a></li>
             <li><a href="{% url 'settings' %}">User settings</a></li>

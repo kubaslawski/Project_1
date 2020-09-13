@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -244,20 +245,23 @@ body{
 					<div class="col-md-3">
 						<h2 class="grid-title"><i class="fa fa-inbox"></i> Inbox</h2>
 						<a class="btn btn-block btn-primary" data-toggle="modal" data-target="#compose-modal"><i class="fa fa-pencil"></i>&nbsp;&nbsp;NEW MESSAGE</a>
+						<a href="{% url 'my_inbox' %}" class="btn btn-block btn-primary"><i></i>&nbsp;&nbsp;Back</a>
 
 						<hr>
-
 						<div>
 							<ul class="nav nav-pills nav-stacked">
-								<li class="header">Folders</li>
-								<li class="active"><a href="{% url 'my_inbox' %}"><i class="fa fa-inbox"></i> Inbox ({{unread_messages}})</a></li>
-								<li><a href="#"><i class="fa fa-star"></i> Starred</a></li>
-								<li><a href="#"><i class="fa fa-bookmark"></i> Important</a></li>
-								<li><a href="#"><i class="fa fa-mail-forward"></i> Sent</a></li>
-								<li><a href="#"><i class="fa fa-pencil-square-o"></i> Drafts</a></li>
-								<li><a href="#"><i class="fa fa-folder"></i> Spam (217)</a></li>
+								<h2 class="grid-title"><i class="fa fa-inbox"></i> Folders</h2>
+								<form method="get" action="/my_inbox">
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_1">Inbox {% if unread_messages == 0 %}  {% else %} ({{unread_messages}}) {% endif %}</button></li>
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_2">Starred {% if unread_starred == 0 %}  {% else %} ({{unread_starred}}) {% endif %}</button></li>
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_3">Important {% if unread_important == 0 %}  {% else %} ({{unread_important}}) {% endif %}</button></li>
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_4">Sent</button></li>
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_5">Drafts</button></li>
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_6">Spam {% if unread_spam == 0 %}  {% else %} ({{unread_spam}}) {% endif %}</button></li>
+								</form>
 							</ul>
 						</div>
+						
 					</div>
 					<!-- END INBOX MENU -->
 					
@@ -295,19 +299,27 @@ body{
 						</div>
 						
 						<div class="padding"></div>
-						
 						<div class="table-responsive">
 								<tbody>
                                 <tr>
                                     <br>
                                     <td><h2>{{message.subject}}</h2></td>
-                                    <p style="border-style: groove; height: 325px;">{{message.context}}</p>
-                                    <!--
+									<p style="border-style: groove; height: 325px;">{{message.context}} <br> <br>
+										{% if message.image %}
+										<img src="{{message.image.url}}" width=150px; height=200px;></p>
+										{% else %}
+										</p>
+										{% endif %}
+                                    <!-- 
 									<td class="action"><input type="checkbox" /></td>
 									<td class="action"><i class="fa fa-star-o"></i></td>
 									<td class="action"><i class="fa fa-bookmark-o"></i></td>
-                                    -->
-                                    <h5><a hrer="">Answer</a>     <a hrer="">Add to favorites</a>     <a hrer="">Delete</a></h5>
+									-->
+									<h5>
+										<a data-toggle="modal" data-target="#compose-modal"><i class="fa fa-pencil"></i>&nbsp;&nbsp;answer</a>    
+										<a hrer="">Add to favorites</a>     
+										<a hrer="">Delete</a>
+									</h5>
 								</tr>
                                 </tbody>
 						</div>		
@@ -323,24 +335,17 @@ body{
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 										<h4 class="modal-title"><i class="fa fa-envelope"></i> Compose New Message</h4>
 									</div>
-									<form action="#" method="post">
+									<form action="" method="post">
+										{% csrf_token %}
 										<div class="modal-body">
 											<div class="form-group">
-												<input name="to" type="email" class="form-control" placeholder="To">
+												<input name="to" type="email" class="form-control" placeholder="To" value={{send_from}}>
 											</div>
 											<div class="form-group">
-												<input name="cc" type="email" class="form-control" placeholder="Cc">
-											</div>
-											<div class="form-group">
-												<input name="bcc" type="email" class="form-control" placeholder="Bcc">
-											</div>
-											<div class="form-group">
-												<input name="subject" type="email" class="form-control" placeholder="Subject">
+												<input name="subject" class="form-control" placeholder="Subject">
 											</div>
 											<div class="form-group">
 												<textarea name="message" id="email_message" class="form-control" placeholder="Message" style="height: 120px;"></textarea>
-											</div>
-											<div class="form-group">														<input type="file" name="attachment">
 											</div>
 										</div>
 										<div class="modal-footer">
@@ -362,7 +367,8 @@ body{
 </div>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script type="text/javascript">
+<script type="text/javascript"></script>
+<script src="{% static 'js/inbox.js' %}"></script>
 	
 </script>
 </body>

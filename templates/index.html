@@ -13,7 +13,7 @@
   </head>
   <body>
     <header class="header--main-page">
-      {% include "navbar.html" %}  
+      {% include "navbar.html" with unread_messages=unread_messages %}  
       <div class="slogan container container--90">
         <div class="slogan--item">
           <h1>
@@ -88,9 +88,9 @@
       <h3>In our website you can find many foundations that we work with, you can also set up your own institution!</h3>
 
       <ul class="help--buttons">
-        <li data-id="1"><a href="{% url 'base' %}#help"  class="btn btn--without-border " onclick="SwitchInstitution()" id="pag_li_1">Fundacjom</a></li>
-        <li data-id="2"><a href="{% url 'base' %}#help"  class="btn btn--without-border " onclick="SwitchInstitution()" id="pag_li_2">Organizacjom pozarządowym</a></li>
-        <li data-id="3"><a href="{% url 'base' %}#help"  class="btn btn--without-border " onclick="SwitchInstitution()" id="pag_li_3">Lokalnym zbiórkom</a></li>
+        <li data-id="1"><a href="{% url 'base' %}#help"  class="btn btn--without-border " onclick="SwitchInstitution()" id="pag_li_1">Foundations</a></li>
+        <li data-id="2"><a href="{% url 'base' %}#help"  class="btn btn--without-border " onclick="SwitchInstitution()" id="pag_li_2">Non-gov organisations</a></li>
+        <li data-id="3"><a href="{% url 'base' %}#help"  class="btn btn--without-border " onclick="SwitchInstitution()" id="pag_li_3">Local charities</a></li>
       </ul>
 
       <!-- SLIDE 1 -->
@@ -122,7 +122,7 @@
                     <a href="?page={{ page_obj_1.paginator.num_pages }}#help">last &raquo;</a>
                 {% endif %}
             </span>
-        </div>
+            </div>
         </ul>
         <!--
         <ul class="help--slides-pagination">

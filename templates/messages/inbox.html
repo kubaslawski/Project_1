@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,9 @@
     <title>Simple email inbox page - Bootdey.com</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+	
+
 <style type="text/css">
 body{
     margin-top:20px;
@@ -244,19 +248,20 @@ body{
 					<div class="col-md-3">
 						<h2 class="grid-title"><i class="fa fa-inbox"></i> Inbox</h2>
 						<a class="btn btn-block btn-primary" data-toggle="modal" data-target="#compose-modal"><i class="fa fa-pencil"></i>&nbsp;&nbsp;NEW MESSAGE</a>
+						<a href="{% url 'base' %}" class="btn btn-block btn-primary"><i></i>&nbsp;&nbsp;Back to home page</a>
 
 						<hr>
 
 						<div>
 							<ul class="nav nav-pills nav-stacked">
-								<li class="header">Folders</li>
-								<li class="active"><a href="{% url 'my_inbox' %}"><i class="fa fa-inbox"></i> Inbox ({{unread_messages}})</a></li>
-								<li><a href="#"><i class="fa fa-star"></i> Starred</a></li>
-								<li><a href="#"><i class="fa fa-bookmark"></i> Important</a></li>
-								<li><a href="#"><i class="fa fa-mail-forward"></i> Sent</a></li>
-								<li><a href="#"><i class="fa fa-pencil-square-o"></i> Drafts</a></li>
-								<li><a href="#"><i class="fa fa-folder"></i> Spam (217)</a></li>
-							</ul>
+								<h2 class="grid-title"><i class="fa fa-inbox"></i> Folders</h2>
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_1">Inbox {% if unread_messages == 0 %}  {% else %} ({{unread_messages}}) {% endif %}</button></li>
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_2">Starred {% if unread_starred == 0 %}  {% else %} ({{untread_starred}}) {% endif %}</button></li>
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_3">Important {% if unread_important == 0 %}  {% else %} ({{unread_important}}) {% endif %}</button></li>
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_4">Sent</button></li>
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_5">Drafts</button></li>
+								<li><button onclick="SwitchInbox()" class="btn btn-block btn-primary" id="inbox_id_6">Spam {% if unread_spam == 0 %}  {% else %} ({{unread_spam}}) {% endif %}</button></li>
+							</ul>	
 						</div>
 					</div>
 					<!-- END INBOX MENU -->
@@ -269,11 +274,11 @@ body{
 									<div class="icheckbox_square-blue" style="position: relative;"><input type="checkbox" id="check-all" class="icheck" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>
 								</label>
 								<div class="btn-group">
-									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" onclick="TestFunc()">
 										Action <span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu" role="menu">
-										<li><a href="#">Mark as read</a></li>
+										<li><a href="#" onclick="MarkAsRead()">Mark as read </a></li>
 										<li><a href="#">Mark as unread</a></li>
 										<li><a href="#">Mark as important</a></li>
 										<li class="divider"></li>
@@ -296,9 +301,94 @@ body{
 						
 						<div class="padding"></div>
 						
+						
 						<div class="table-responsive active" id="message_inbox">
 							<table class="table">
-								{% for m in messages_inbox %}
+								{% for m in page_obj_1 %}
+								{% if m.is_read == True %}
+								<tbody>
+                                <tr>
+									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
+									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
+									<td class="time">{{m.timestamp}}</td>
+								</tr>
+								</tbody>
+								{% else %}
+								<tbody>
+									<tr>
+
+										<td class="name"><a href="{% url 'message' m.id %}" ><b>{{m.send_from.username}}</b></a></td>
+										<td class="subject"><a href="{% url 'message' m.id %}"><b>{{m.subject}}</b></a></td>
+										<td class="time"><b>{{m.timestamp}}</b></td>
+									</tr>
+									</tbody>
+								{% endif %}
+								{% endfor %}
+								<div class="pagination">
+									<span class="step-links">
+										{% if page_obj_1.has_previous %}
+											<a href="?page=1#help">&laquo; first</a>
+											<a href="?page={{ page_obj_1.previous_page_number }}#help">previous</a>
+										{% endif %}
+								
+										<span class="current">
+											Page {{ page_obj_1.number }} of {{ page_obj_1.paginator.num_pages }}.
+										</span>
+								
+										{% if page_obj_1.has_next %}
+											<a href="?page={{ page_obj_1.next_page_number }}#help">next</a>
+											<a href="?page={{ page_obj_1.paginator.num_pages }}#help">last &raquo;</a>
+										{% endif %}
+									</span>
+								</div>
+                            </table>
+						</div>
+						
+                        
+                        <div class="table-responsive" id="starred_inbox" hidden>
+							<table class="table">
+								{% for m in page_obj_2 %}
+								{% if m.is_read == True %}
+								<tbody>
+                                <tr>
+									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
+									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
+									<td class="time">{{m.timestamp}}</td>
+								</tr>
+								</tbody>
+								{% else %}
+								<tbody>
+									<tr>
+										<td class="name"><a href="{% url 'message' m.id %}" ><b>{{m.send_from.username}}</b></a></td>
+										<td class="subject"><a href="{% url 'message' m.id %}"><b>{{m.subject}}</b></a></td>
+										<td class="time"><b>{{m.timestamp}}</b></td>
+									</tr>
+									</tbody>
+								{% endif %}
+								{% endfor %}
+								<div class="pagination">
+									<span class="step-links">
+										{% if page_obj_2.has_previous %}
+											<a href="?page=1#help">&laquo; first</a>
+											<a href="?page={{ page_obj_2.previous_page_number }}#help">previous</a>
+										{% endif %}
+								
+										<span class="current">
+											Page {{ page_obj_2.number }} of {{ page_obj_2.paginator.num_pages }}.
+										</span>
+								
+										{% if page_obj_2.has_next %}
+											<a href="?page={{ page_obj_2.next_page_number }}#help">next</a>
+											<a href="?page={{ page_obj_2.paginator.num_pages }}#help">last &raquo;</a>
+										{% endif %}
+									</span>
+								</div>
+                            </table>
+                        </div>
+                        
+						<div class="table-responsive" id="important_inbox" hidden>
+							<table class="table">
+								{% for m in page_obj_3 %}
 								{% if m.is_read == True %}
 								<tbody>
                                 <tr>
@@ -322,47 +412,30 @@ body{
 									</tr>
 									</tbody>
 								{% endif %}
-                                {% endfor %}
+								{% endfor %}
+								<div class="pagination">
+									<span class="step-links">
+										{% if page_obj_3.has_previous %}
+											<a href="?page=1#help">&laquo; first</a>
+											<a href="?page={{ page_obj_3.previous_page_number }}#help">previous</a>
+										{% endif %}
+								
+										<span class="current">
+											Page {{ page_obj_3.number }} of {{ page_obj_3.paginator.num_pages }}.
+										</span>
+								
+										{% if page_obj_3.has_next %}
+											<a href="?page={{ page_obj_3.next_page_number }}#help">next</a>
+											<a href="?page={{ page_obj_3.paginator.num_pages }}#help">last &raquo;</a>
+										{% endif %}
+									</span>
+								</div>
                             </table>
                         </div>
                         
-                        <div class="table-responsive" id="starred_inbox">
+                        <div class="table-responsive" id="sent_inbox" hidden>
 							<table class="table">
-                                {% for m in messages_starred %}
-								<tbody>
-                                <tr>
-									<td class="action"><input type="checkbox" /></td>
-									<td class="action"><i class="fa fa-star-o"></i></td>
-									<td class="action"><i class="fa fa-bookmark-o"></i></td>
-									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
-									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
-									<td class="time">{{m.timestamp}}</td>
-								</tr>
-                                </tbody>
-                                {% endfor %}
-                            </table>
-                        </div>
-                        
-                        <div class="table-responsive" id="starred_inbox">
-							<table class="table">
-                                {% for m in messages_important %}
-								<tbody>
-                                <tr>
-									<td class="action"><input type="checkbox" /></td>
-									<td class="action"><i class="fa fa-star-o"></i></td>
-									<td class="action"><i class="fa fa-bookmark-o"></i></td>
-									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
-									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
-									<td class="time">{{m.timestamp}}</td>
-								</tr>
-                                </tbody>
-                                {% endfor %}
-                            </table>
-                        </div>
-                        
-                        <div class="table-responsive" id="starred_inbox">
-							<table class="table">
-                                {% for m in messages_sent %}
+                                {% for m in page_obj_4 %}
 								<tbody>
                                 <tr>
 									<td class="action"><input type="checkbox" /></td>
@@ -373,19 +446,107 @@ body{
 									<td class="time">{{m.timestamp}}</td>
 								</tr>
                                 </tbody>
-                                {% endfor %}
+								{% endfor %}
+								<div class="pagination">
+									<span class="step-links">
+										{% if page_obj_4.has_previous %}
+											<a href="?page=1#help">&laquo; first</a>
+											<a href="?page={{ page_obj_4.previous_page_number }}#help">previous</a>
+										{% endif %}
+								
+										<span class="current">
+											Page {{ page_obj_4.number }} of {{ page_obj_4.paginator.num_pages }}.
+										</span>
+								
+										{% if page_obj_4.has_next %}
+											<a href="?page={{ page_obj_4.next_page_number }}#help">next</a>
+											<a href="?page={{ page_obj_4.paginator.num_pages }}#help">last &raquo;</a>
+										{% endif %}
+									</span>
+								</div>
                             </table>
 						</div>
 
-						<ul class="pagination">
-							<li class="disabled"><a href="#">«</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">»</a></li>
-						</ul>						
+						<div class="table-responsive" id="sent_inbox" hidden>
+							<table class="table">
+                                {% for m in page_obj_5 %}
+								<tbody>
+                                <tr>
+									<td class="action"><input type="checkbox" /></td>
+									<td class="action"><i class="fa fa-star-o"></i></td>
+									<td class="action"><i class="fa fa-bookmark-o"></i></td>
+									<td class="name"><a href="{% url 'message' m.id %}" ><b>{{m.send_from.username}}</b></a></td>
+									<td class="subject"><a href="{% url 'message' m.id %}"><b>{{m.subject}}</b></a></td>
+									<td class="time">{{m.timestamp}}</td>
+								</tr>
+                                </tbody>
+								{% endfor %}
+								<div class="pagination">
+									<span class="step-links">
+										{% if page_obj_5.has_previous %}
+											<a href="?page=1#help">&laquo; first</a>
+											<a href="?page={{ page_obj_5.previous_page_number }}#help">previous</a>
+										{% endif %}
+								
+										<span class="current">
+											Page {{ page_obj_5.number }} of {{ page_obj_5.paginator.num_pages }}.
+										</span>
+								
+										{% if page_obj_5.has_next %}
+											<a href="?page={{ page_obj_5.next_page_number }}#help">next</a>
+											<a href="?page={{ page_obj_5.paginator.num_pages }}#help">last &raquo;</a>
+										{% endif %}
+									</span>
+								</div>
+                            </table>
+						</div>
+
+						<div class="table-responsive" id="starred_inbox" hidden>
+							<table class="table">
+								{% for m in page_obj_6 %}
+								{% if m.is_read == True %}
+								<tbody>
+                                <tr>
+									<td class="action"><input type="checkbox" /></td>
+									<td class="action"><i class="fa fa-star-o"></i></td>
+									<td class="action"><i class="fa fa-bookmark-o"></i></td>
+									<td class="name"><a href="{% url 'message' m.id %}" >{{m.send_from.username}}</a></td>
+									<td class="subject"><a href="{% url 'message' m.id %}">{{m.subject}}</a></td>
+									<td class="time">{{m.timestamp}}</td>
+								</tr>
+								</tbody>
+								{% else %}
+								<tbody>
+									<tr>
+										<td class="action"><input type="checkbox" /></td>
+										<td class="action"><i class="fa fa-star-o"></i></td>
+										<td class="action"><i class="fa fa-bookmark-o"></i></td>
+										<td class="name"><a href="{% url 'message' m.id %}" ><b>{{m.send_from.username}}</b></a></td>
+										<td class="subject"><a href="{% url 'message' m.id %}"><b>{{m.subject}}</b></a></td>
+										<td class="time"><b>{{m.timestamp}}</b></td>
+									</tr>
+									</tbody>
+								{% endif %}
+								{% endfor %}
+								<div class="pagination">
+									<span class="step-links">
+										{% if page_obj_6.has_previous %}
+											<a href="?page=1#help">&laquo; first</a>
+											<a href="?page={{ page_obj_1.previous_page_number }}#help">previous</a>
+										{% endif %}
+								
+										<span class="current">
+											Page {{ page_obj_6.number }} of {{ page_obj_6.paginator.num_pages }}.
+										</span>
+								
+										{% if page_obj_6.has_next %}
+											<a href="?page={{ page_obj_6.next_page_number }}#help">next</a>
+											<a href="?page={{ page_obj_6.paginator.num_pages }}#help">last &raquo;</a>
+										{% endif %}
+									</span>
+								</div>
+                            </table>
+                        </div>					
 					</div>
 					<!-- END INBOX CONTENT -->
 					
@@ -438,7 +599,8 @@ body{
 </div>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script type="text/javascript">
+<script type="text/javascript"></script>
+<script src="{% static 'js/inbox.js' %}"></script>
 	
 </script>
 </body>
